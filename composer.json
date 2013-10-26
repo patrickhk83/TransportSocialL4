@@ -6,7 +6,8 @@
 	"require": {
 		"laravel/framework": "4.0.*",
 		"way/generators": "dev-master",
-		"guzzle/guzzle": "dev-rfc3986"
+		"guzzle/guzzle": "dev-rfc3986",
+		"teepluss/asset": "dev-master"
 	},
 	"autoload": {
 		"classmap": [

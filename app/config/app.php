@@ -79,6 +79,7 @@ return array(
 	*/
 
 	'providers' => array(
+		'Teepluss\Asset\AssetServiceProvider',
 		'Way\Generators\GeneratorsServiceProvider',
 		'Illuminate\Foundation\Providers\ArtisanServiceProvider',
 		'Illuminate\Auth\AuthServiceProvider',
@@ -141,7 +142,7 @@ return array(
 	*/
 
 	'aliases' => array(
-
+		'Asset'           => 'Teepluss\Asset\Facades\Asset',
 		'App'             => 'Illuminate\Support\Facades\App',
 		'Artisan'         => 'Illuminate\Support\Facades\Artisan',
 		'Auth'            => 'Illuminate\Support\Facades\Auth',
