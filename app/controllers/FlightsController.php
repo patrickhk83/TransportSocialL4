@@ -11,7 +11,8 @@ class FlightsController extends BaseController {
 	{
 		$flightStatus = new Services\Flightstat\FlightStatus;
 		$flight = $flightStatus->find('313336893');
-		var_dump($flight);
+		$data['flights'] = $flight->flightStatuses;
+		return View::make('flights.index', $data);
 	}
 
 	/**
