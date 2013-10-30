@@ -79,4 +79,8 @@ class FlightsController extends BaseController {
 		//
 	}
 
+	public function by_airport() {
+		return View::make('flights.by_airport');
+	}
+
 }
