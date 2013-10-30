@@ -5,7 +5,40 @@ class FlightStatus extends FlightstatApi {
 		parent::__contruct('flightstatus');
 	}
 
-	public function find($id) {
-		return $this->api_call('airport/status/ABQ/dep/2013/10/26/10');
+	public function by_flight_id($id) {
+		return $this->api_call('flight/status/'.$id);
 	}
+
+	public function by_airport($request) {
+		return $this->api_call('airport/status/'.
+      $request['arrivalAirportCode'].'/'.
+      $request['direction'].'/'.
+      $this->date($request['date']).'/'.
+      $request['hour']
+    );
+	}
+
+	public function by_route($request) {
+		return $this->api_call('route/status'.
+      $request['departureAirportCode'].'/'.
+      $request['arrivalAirportCode'].
+      '/dep/'.
+      $this->date($request['date'])
+    );
+	}
+
+	public function by_flight_num($request) {
+		return $this->api_call('flight/status/'.
+      $request['carrierCode'].'/'.
+      $request['flightNo'].'/dep/'.
+      $this->date($request['date'])
+    );
+	}
+
+	public function date($date) {
+    return
+      $date['year'].'/'.
+      $date['month'].'/'.
+      $date['day'];
+  }
 }
