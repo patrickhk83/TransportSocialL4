@@ -16,6 +16,7 @@ Route::get('/', function()
 	return Redirect::route('posts.index');
 });
 
+Route::get('flights/by_airport', 'FlightsController@by_airport');
 Route::resource('flights', 'FlightsController');
 Route::resource('users', 'UsersController');
 Route::resource('posts', 'PostsController');
