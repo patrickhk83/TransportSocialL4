@@ -7,7 +7,8 @@
 		"laravel/framework": "4.0.*",
 		"way/generators": "dev-master",
 		"guzzle/guzzle": "dev-rfc3986",
-		"teepluss/asset": "dev-master"
+		"teepluss/asset": "dev-master",
+		"barryvdh/laravel-ide-helper": "1.*"
 	},
 	"autoload": {
 		"classmap": [

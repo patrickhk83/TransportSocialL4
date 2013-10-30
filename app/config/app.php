@@ -79,6 +79,7 @@ return array(
 	*/
 
 	'providers' => array(
+		'Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider',
 		'Teepluss\Asset\AssetServiceProvider',
 		'Way\Generators\GeneratorsServiceProvider',
 		'Illuminate\Foundation\Providers\ArtisanServiceProvider',
@@ -114,7 +115,6 @@ return array(
 		'Illuminate\Validation\ValidationServiceProvider',
 		'Illuminate\View\ViewServiceProvider',
 		'Illuminate\Workbench\WorkbenchServiceProvider',
-
 	),
 
 	/*
