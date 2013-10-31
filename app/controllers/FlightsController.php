@@ -83,4 +83,11 @@ class FlightsController extends BaseController {
 		return View::make('flights.by_airport');
 	}
 
+	public function by_route() {
+		return View::make('flights.by_route');
+	}
+
+	public function by_flight_num() {
+		return View::make('flights.by_flight_num');
+	}
 }
