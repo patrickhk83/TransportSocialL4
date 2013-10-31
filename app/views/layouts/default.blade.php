@@ -1,18 +1,26 @@
 <!DOCTYPE html>
 <html lang=”en”>
   <head>
+    {{ HTML::style("//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css") }}
+    {{ HTML::style("//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css") }}
+
+    {{ HTML::script("//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js") }}
     <meta charset="UTF-8" />
     <title>
       Tutorial
     </title>
   </head>
   <body>
-    @include("_partials.header")
-    <div class="content">
-      <div class="container">
-        @yield("content")
-     </div>
+    <div class="container">
+      @include("_partials.header")
+      <div class="main">
+        <div class="panel panel-default">
+          <div class="content panel-body">
+            @yield("content")
+          </div>
+        </div>
+      </div>
+      @include("_partials.footer")
     </div>
-    @include("_partials.footer")
   </body>
 </html>
