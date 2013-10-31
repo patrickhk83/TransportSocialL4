@@ -11,12 +11,11 @@
 |
 */
 
-Route::get('/', function()
+// Dynamically include all files in the routes directory
+foreach (new DirectoryIterator(__DIR__.'/routes') as $file)
 {
-	return Redirect::route('posts.index');
-});
-
-Route::get('flights/by_airport', 'FlightsController@by_airport');
-Route::resource('flights', 'FlightsController');
-Route::resource('users', 'UsersController');
-Route::resource('posts', 'PostsController');
+    if (!$file->isDot() && !$file->isDir() && $file->getFilename() != '.gitignore')
+    {
+        require_once __DIR__.'/routes/'.$file->getFilename();
+    }
+}
