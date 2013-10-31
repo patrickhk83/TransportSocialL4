@@ -15,7 +15,7 @@
     </div>
     <div class="form-group">
       <label for="hour">Hour of Day</label>
-      {{Form::select('hour', array('0' => '0000-0600', '6' => '0600-1200', '12' => '0600-1200', '18' => '1800-0000')) }}
+      {{Form::select('hour', array('0' => '0000-0600', '6' => '0600-1200', '12' => '0600-1200', '18' => '1800-0000'), null, array('class' => 'form-control')) }}
     </div>
     <div class="form-group">
       <label class="radio-inline">
