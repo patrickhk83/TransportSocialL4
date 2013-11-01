@@ -1,7 +1,7 @@
 @extends('layouts.default')
 @section('content')
   @include('_partials.errors')
-  {{ Form::open(array('action' => 'FlightsController@by_flight_num'))}}
+  {{ Form::open(array('route' => 'flights.by_flight_num'))}}
     <div class="form-group">
       <label for="carrierCode">Carrier</label>
   		{{ Form::text('carrierCode', null, array('class' => 'form-control')) }}

@@ -23,19 +23,17 @@
         @if($flight->totalPassengers > 0)
           <p>
             @foreach($flight->totalPassengers as $passenger)
-              <a href="/auth/edit_user/{{ $passenger->id }}" data-toggle="tooltip" title="{{ $passenger->username }}">
-                <img src="/assets/images/default-profile-pic.png" width="20" height="20">
-              </a>
+              <img src="/assets/images/default-profile-pic.png" width="20" height="20">
             @endforeach
           </p>
         @endif
 
-        @if(isset($user))
+        @if(!Auth::guest())
           <div>
-            @if(!$flight->isSaved)
-              <a class="btn btn-primary" href="/flight/setPrivacy/{{ $flight->flightId }}">Save</a>
+            @if(!$flight->is_saved)
+              {{ link_to_route('flight.privacy', 'Save', array($flight->flightId), array('class' => 'btn btn-primary')) }}
             <?php else: ?>
-              <a class="btn btn-primary" href="/flight/deleteFlight/{{ $flight->flightId }}">Delete</a>
+              {{ link_to_route('flight.delete', 'Delete', array($flight->flightId), array('class' => 'btn btn-primary')) }}
             @endif
           </div>
         @endif
