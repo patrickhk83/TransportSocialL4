@@ -20,9 +20,9 @@
           <p>Arrival Time: {{ date('d/m/Y h:m', strtotime($flight->arrivalDate->dateLocal)) }}</p>
         </div>
 
-        @if($flight->totalPassengers > 0)
+        @if($flight->passengers > 0)
           <p>
-            @foreach($flight->totalPassengers as $passenger)
+            @foreach($flight->passengers as $passenger)
               <img src="/assets/images/default-profile-pic.png" width="20" height="20">
             @endforeach
           </p>
