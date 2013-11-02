@@ -29,9 +29,9 @@ class Auth {
 			'activation' => $user->getActivationCode(),
 		);
 
-		\Mail::send('emails.auth.activateuser' , $data , function($message)
+		\Mail::send('emails.auth.activateuser' , $data , function($message) use ($data)
 		{
-			$message->to($user->email , 'Example')->subject('email signup');
+			$message->to($data['email'] , 'Example')->subject('email signup');
 		});	
 	}
 
