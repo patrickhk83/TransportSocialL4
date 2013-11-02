@@ -48,6 +48,7 @@ class UsersController extends BaseController {
 				//Register a user.
 				$auth = new Services\Authentication\Auth;
 				$user = $auth->register(Input::all(), 'Users');
+				$auth->send_activation_email($user);
 
 			}
 			catch(Cartalyst\Sentry\Users\UserExistsException $e)
