@@ -8,3 +8,7 @@ Route::get('user/{id}/flights', array('as' => 'user.flights', 'uses' => 'UserCon
 
 Route::get('user/{id}/profile', array('as' => 'user.profile', 'uses' => 'UserController@profile'))
 		 ->where(array('id' => '[0-9]+'));
+
+Route::post('register', array('as' => 'users.register', 'uses' => 'UsersController@create'));
+
+Route::get('register', array('as' => 'users.registerForm', 'uses' => 'UsersController@register'));
