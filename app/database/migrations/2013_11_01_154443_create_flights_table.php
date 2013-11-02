@@ -13,7 +13,7 @@ class CreateFlightsTable extends Migration {
 	public function up()
 	{
 		Schema::create('flights', function(Blueprint $table) {
-			$table->increments('id');
+			$table->integer('id')->unsigned()->index();
 			$table->integer('number');
 			$table->string('carrierFsCode', 6);
 			$table->string('arrivalAirportCode', 6);
