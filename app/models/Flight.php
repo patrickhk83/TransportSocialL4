@@ -5,6 +5,8 @@ class Flight extends Eloquent {
 
 	public static $rules = array();
 
+  public $incrementing = false;
+
   public function departureAirport() {
     return $this->hasOne('Airport');
   }
