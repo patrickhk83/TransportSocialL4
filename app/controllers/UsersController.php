@@ -28,19 +28,7 @@ class UsersController extends BaseController {
 	 */
 	public function create()
 	{
-/*		
-		$group = Sentry::createGroup(array(
-			'name' => 'Admins' ,
-			'permissions' => array('admin' => 1, 'users' => 1,),
-		));
-
-		$group1 = Sentry::createGroup(array(
-			'name' => 'Users' ,
-			'permissions' => array('admin' => 0, 'users' => 1,),
-		));
-*/		
-		
-        $validation = new Services\Validators\Register;
+    $validation = new Services\Validators\Register;
 
 		if($validation->passes()) {
 			try
