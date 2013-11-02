@@ -8,7 +8,8 @@
 		"way/generators": "dev-master",
 		"guzzle/guzzle": "dev-rfc3986",
 		"teepluss/asset": "dev-master",
-		"barryvdh/laravel-ide-helper": "1.*"
+		"barryvdh/laravel-ide-helper": "1.*",
+		"cartalyst/sentry": "2.0.*"
 	},
 	"autoload": {
 		"classmap": [
