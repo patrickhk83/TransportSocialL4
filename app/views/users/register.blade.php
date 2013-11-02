@@ -1,14 +1,13 @@
-@extends('layouts/default')
 @extends('layouts.default')
 @section('content')
-	<script src="{{ asset('js/manageuser.js') }}"></script>
+	{{ HTML::script("js/manageuser.js") }}
 
 	<div class="page-header">
 		<h1>Signup Now For a Account</h1>
 	</div>	
 
 	@include('_partials.errors')
-	{{ Form::open(array('route' => 'users.register', 'class' => 'form-horizontal', 'method' => 'post', 'id' => 'customer_form'))}}
+	{{ Form::open(array('route' => 'users.register', 'id' => 'customer_form'))}}
 		<input type="hidden" name="csrf_token" value="" />
 		<div class="form-group">
 			{{ Form::label('first_name' , trans('user_auth.create_user_fname_label'))}}
