@@ -19,11 +19,11 @@ class CreateAirportTable extends Migration {
 			$table->text('city');
 			$table->string('iata', 3);
 			$table->string('icao', 4);
-			$table->double('x');
-			$table->double('y');
-			$table->integer('elevation');
-			$table->float('timezone');
-			$table->string('dst', 1);
+			$table->double('x')->nullable();
+			$table->double('y')->nullable();
+			$table->integer('elevation')->nullable();
+			$table->float('timezone')->nullable();
+			$table->string('dst', 1)->nullable();
 			$table->timestamps();
 		});
 	}
