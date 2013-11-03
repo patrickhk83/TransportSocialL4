@@ -10,13 +10,13 @@ class AirlinesTableSeeder extends Seeder {
 		$airlines = json_decode($airlines);
 		foreach($airlines as $airline) {
 			$seed = array(
-				'active' => $airline->active;
-				'mode' => $airline->mode;
-				'name' => $airline->name;
-				'icao' => $airline->icao;
-				'callsign' => $airline->callsign;
-				'country' => $airline->country;
-				'alias' => $airline->alias;
+				'active' => $airline->active
+				'mode' => $airline->mode
+				'name' => $airline->name
+				'icao' => $airline->icao
+				'callsign' => $airline->callsign
+				'country' => $airline->country
+				'alias' => $airline->alias
 			);
 			DB::table('airlines')->insert($seed);
 		}
