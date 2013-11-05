@@ -15,15 +15,13 @@ class CreateAirportsTable extends Migration {
 		Schema::create('airports', function(Blueprint $table) {
 			$table->increments('id');
 			$table->text('name');
-			$table->text('country');
 			$table->text('city');
+			$table->string('country_code', 3);
 			$table->string('iata', 3)->nullable();
 			$table->string('icao', 4)->nullable();
-			$table->double('x')->nullable();
-			$table->double('y')->nullable();
-			$table->integer('elevation')->nullable();
-			$table->float('timezone')->nullable();
-			$table->string('dst', 1)->nullable();
+			$table->string('airport_code');
+			$table->double('longitude')->nullable();
+			$table->double('latitude')->nullable();
 			$table->timestamps();
 		});
 	}
