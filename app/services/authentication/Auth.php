@@ -6,6 +6,42 @@ class Auth {
 
 	}
 
+	public function getUserInfo()
+	{
+		if(!\Sentry::check()) return false;
+		try
+		{
+			$user = \Sentry::getUser();
+		}	
+		catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
+		{
+			return false;
+		}
+		return $user;
+	}
+
+	public function login($fields)
+	{
+		$throttleProvider = \Sentry::getThrottleProvider();
+		$throttleProvider->disable();		
+		$user = \Sentry::authenticate(
+			array(
+				'email' => $fields['username'] ,
+				'password' => $fields['passwords'] ,
+			) , 
+			false
+		);
+
+		return $user;
+		
+	}
+
+	public function logout()
+	{
+		if(\Sentry::check())
+			\Sentry::logout();
+	}
+
 	public function register($fields, $groupname) {
 		$user = \Sentry::register(
 			array(

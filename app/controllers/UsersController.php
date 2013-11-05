@@ -9,7 +9,42 @@ class UsersController extends BaseController {
 	 */
 	public function index()
 	{
-    return View::make('users.index');
+    	return View::make('users.index');
+	}
+
+
+	public function auth()
+	{
+		
+		$validation = new Services\Validators\Login;
+		$auth = new Services\Authentication\Auth;
+
+		if($validation->passes())
+		{
+			
+			try
+			{
+				$user = $auth->login(Input::all());
+				
+			}
+			catch (Cartalyst\Sentry\Users\UserNotActivatedException $e)
+			{
+			    Session::flash('error', 'User not activated.');
+			    return Redirect::back()->withInput()->withErrors('User not activated.');
+			}
+			catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
+			{
+				Session::flash('error', 'User not found.');
+				return Redirect::back()->withInput()->withErrors('User not found.');
+				//return "33333333";
+			}
+			return Redirect::route('user.profile', array('id' => $user->id));
+			//return "1111111111111";
+					
+		}
+		return Redirect::back()->withInput()->withErrors($validation->errors);
+		
+
 	}
 
 	public function login() {
@@ -42,7 +77,7 @@ class UsersController extends BaseController {
 			catch(Cartalyst\Sentry\Users\UserExistsException $e)
 			{
 				Session::flash('error', 'User with this login already exists.');
-				return Redirect::back()->withInput()->withErrors($validation->errors);
+				return Redirect::back()->withInput()->withErrors('User with this login already exists.');
 			}
 			return Redirect::route('user.profile', array('id' => $user->id));
 		}
@@ -51,9 +86,8 @@ class UsersController extends BaseController {
 	}
 
 	public function logout() {
-		if(!Auth::guest()) {
-			Auth::logout();
-		}
+		$auth = new Services\Authentication\Auth;
+		$auth->logout();
 		return Redirect::route('site.home');
 	}
 
@@ -62,7 +96,11 @@ class UsersController extends BaseController {
 	}
 
 	public function profile($id) {
-
+		$auth = new Services\Authentication\Auth;
+		$user = $auth->getUserInfo();
+		if(!$user)
+			return View::make('users.login');
+		return View::make('users.profile')->with(array('user' => $user));
 	}
 
 }
