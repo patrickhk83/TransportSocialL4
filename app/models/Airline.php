@@ -1,6 +1,6 @@
 <?php
 
-class Airport extends Eloquent {
+class Airline extends Eloquent {
 	protected $guarded = array();
 
 	protected $fillable = array('*');
