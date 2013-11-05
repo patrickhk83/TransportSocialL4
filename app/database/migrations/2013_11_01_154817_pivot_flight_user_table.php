@@ -31,6 +31,10 @@ class PivotFlightUserTable extends Migration {
 	 */
 	public function down()
 	{
+		Schema::table('flight_user', function(Blueprint $table) {
+    	$table->dropForeign('flight_user_flight_id_foreign');
+			$table->dropForeign('flight_user_user_id_foreign');
+		});
 		Schema::drop('flight_user');
 	}
 
