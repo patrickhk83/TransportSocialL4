@@ -15,12 +15,9 @@ class CreateAirlinesTable extends Migration {
 		Schema::create('airlines', function(Blueprint $table) {
 			$table->increments('id');
 			$table->text('name');
-			$table->string('icao', 3)->nullable();
-			$table->text('callsign')->nullable();
-			$table->text('country')->nullable();
-			$table->text('alias')->nullable();
-			$table->string('mode', 1)->nullable();
-			$table->string('active', 1);
+			$table->string('airline_code');
+			$table->string('icao', 4)->nullable();
+			$table->string('iata', 4)->nullable();
 			$table->timestamps();
 		});
 	}
