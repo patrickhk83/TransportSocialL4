@@ -16,9 +16,9 @@
       <li>{{ link_to_route('flights.by_airport', 'By Airport') }}</li>
       <li>{{ link_to_route('flights.by_route', 'By Route') }}</li>
       <li>{{ link_to_route('flights.by_flight_num', 'By Flight') }}</li>
-      @if(!Auth::guest())
-        <li>{{ link_to_route('user.flights', 'Save Flights', array($user->id)) }}</li>
-        <li>{{ link_to_route('user.profile', 'My Profile', array($user->id)) }}</li>
+      @if(Sentry::check())
+        <li>{{ link_to_route('user.flights', 'Save Flights', array(Sentry::getUser()->id)) }}</li>
+        <li>{{ link_to_route('user.profile', 'My Profile', array(Sentry::getUser()->id)) }}</li>
         <li>{{ link_to_route('users.logout', 'Logout') }}</li>
       @else
         <li>{{ link_to_route('users.login', 'Login') }}</li>
