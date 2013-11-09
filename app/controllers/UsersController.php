@@ -108,7 +108,6 @@ class UsersController extends BaseController {
 				Session::flash('error', 'User was not found.');
 				return Redirect::back()->withInput()->withErrors('User was not found.');
 			}
-
 		}
 	}
 
@@ -125,7 +124,6 @@ class UsersController extends BaseController {
 		$photos = $auth->getUserPhotos($user->id);
 		if(count($photos) == 0)
 		{
-
 			$profile_pic = "images/default-profile-pic.png";
 			return View::make('users.profile')->with(
 				array(
