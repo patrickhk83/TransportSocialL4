@@ -24,7 +24,7 @@ class Auth {
 
 	public function getUserPhotos($user_id , $photo_id = null)
 	{
-		$photos = \User::find($user_id)->photos();
+		$photos = \User::find($user_id)->photos()->get();
 		if(!is_null($photo_id)) {
 			$photos = $photos->where('id', '=', $photo_id)->first();
 		}
