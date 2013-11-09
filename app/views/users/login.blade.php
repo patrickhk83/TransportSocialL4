@@ -8,7 +8,7 @@
 	</div>
 	<div class="form-group">
 		<label for="passwords">Password</label>
-		{{ Form::text('passwords', null, array('class' => 'form-control')) }}
+		{{ Form::password('passwords', array('class' => 'form-control')) }}
 	</div>
 	{{ Form::submit('Login', array('class' => 'btn btn-primary')) }}
 	{{ Form::close() }}
