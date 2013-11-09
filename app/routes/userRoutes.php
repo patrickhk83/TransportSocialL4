@@ -15,3 +15,7 @@ Route::get('user/{id}/profile', array('as' => 'user.profile', 'uses' => 'UsersCo
 Route::post('register', array('as' => 'users.register', 'uses' => 'UsersController@create'));
 
 Route::get('register', array('as' => 'users.registerForm', 'uses' => 'UsersController@register'));
+
+Route::get('user/edit_profile' , array('as' => 'users.edit_profile' , 'uses' => 'UsersController@edit_profile'));
+
+Route::post('user/edit_profile' , array('as' => 'users.update' , 'uses' => 'UsersController@update'));
