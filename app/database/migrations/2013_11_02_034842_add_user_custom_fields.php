@@ -22,6 +22,7 @@ class AddUserCustomFields extends Migration {
 			$table->string('musics')->nullable();
 			$table->string('movies')->nullable();
 			$table->string('books')->nullable();
+			$table->integer('profile_pic');
 		});
 	}
 
@@ -42,6 +43,7 @@ class AddUserCustomFields extends Migration {
 			$table->dropColumn('musics');
 			$table->dropColumn('movies');
 			$table->dropColumn('books');
+			$table->dropColumn('profile_pic');
 		});
 	}
 
