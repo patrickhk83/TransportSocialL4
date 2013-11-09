@@ -36,11 +36,8 @@ class UsersController extends BaseController {
 			{
 				Session::flash('error', 'User not found.');
 				return Redirect::back()->withInput()->withErrors('User not found.');
-				//return "33333333";
 			}
 			return Redirect::route('user.profile', array('id' => $user->id));
-			//return "1111111111111";
-
 		}
 		return Redirect::back()->withInput()->withErrors($validation->errors);
 
