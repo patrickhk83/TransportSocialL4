@@ -85,6 +85,36 @@ class UsersController extends BaseController {
 		return Redirect::back()->withInput()->withErrors($validation->errors);
 	}
 
+	public function update()
+	{
+		$validation = new Services\Validators\UpdateProfile;
+
+		if($validation->passes())
+		{
+			try
+			{
+				$auth = new Services\Authentication\Auth;
+				$user = $auth->update(Input::all());
+				if(!$user)
+					return Redirect::back()->withInput->withErrors('Failed to update profile.');
+				else
+					return Redirect::route('user.profile' , array('id' => $user->id));	
+
+			}
+			catch (Cartalyst\Sentry\Users\UserExistsException $e)
+			{
+				Session::flash('error', 'User with this login already exists.');
+				return Redirect::back()->withInput()->withErrors('User with this login already exists.');
+			}
+			catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
+			{
+				Session::flash('error', 'User was not found.');
+				return Redirect::back()->withInput()->withErrors('User was not found.');
+			}
+
+		}
+	}
+
 	public function logout() {
 		$auth = new Services\Authentication\Auth;
 		$auth->logout();
@@ -100,7 +130,28 @@ class UsersController extends BaseController {
 		$user = $auth->getUserInfo();
 		if(!$user)
 			return View::make('users.login');
-		return View::make('users.profile')->with(array('user' => $user));
+		$country = $auth->getCountries($user->country);
+		$count  = $auth->countUserPhotos($user->id , $user->profile_pic);
+		if($count > 0)
+		{
+			$profile_pic = "images/default-profile-pic.png";
+			return View::make('users.profile')->with(array('user' => $user , 'profile_pic' => $profile_pic , 'country' => $country));
+		}
+		else
+		{
+			$user_photo = $auth->getUserPhotos($user->id , null);
+			$profile_pics = $auth->getUserPhotos($user->id , $user->profile_pic);
+			$profile_pic = $profile_pics->path;
+			return View::make('users.profile')->with(array('user' => $user , 'profile_pic' => $profile_pic , 'profile_pics' => $profile_pics , 'country' => $country));
+		}
+	}
+
+	public function edit_profile()
+	{
+		$auth = new Services\Authentication\Auth;
+		$user = $auth->getUserInfo();
+		$countries = $auth->getCountries(null);
+		return View::make('users.edit_profile')->with(array('user' => $user , 'countries' => $countries));
 	}
 
 }
