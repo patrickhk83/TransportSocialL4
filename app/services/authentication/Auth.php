@@ -3,7 +3,7 @@
 
 class Auth {
 
-
+	public $errors = array();
 
 	public function __construct() {
 
@@ -11,82 +11,61 @@ class Auth {
 
 	public function getUserInfo()
 	{
-		if(!\Sentry::check()) return false;
 		try
 		{
 			$user = \Sentry::getUser();
-		}	
+		}
 		catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
 		{
-			return false;
+			$errors[] = "User not found";
 		}
 		return $user;
 	}
 
-	public function getUserPhotos($user_id , $photo_id)
+	public function getUserPhotos($user_id , $photo_id = null)
 	{
-		if($photo_id == null)
-			$photos = \DB::table('users_photos')->where('user_id' , $user_id)->get();
-		else
-			$photos = \DB::table('users_photos')->where('user_id' , $user_id)->where('id' , $photo_id)->first();
+		$photos = \User::find($user_id)->photos();
+		if(!is_null($photo_id)) {
+			$photos = $photos->where('id', '=', $photo_id)->first();
+		}
 		return $photos;
 
 	}
 
-
-
-	public function countUserPhotos($user_id , $photo_id)
+	public function getCountries($country_code = null)
 	{
-		if($photo_id == null)
-			$photos_counter = \DB::table('users_photos')->where('user_id' , $user_id)->count();
-		else
-			$photos_counter = \DB::table('users_photos')->where('user_id' , $user_id)->where('id' , $photo_id)->count();
-		return $photos_counter;
-
-	}
-
-
-	public function getCountries($country_code)
-	{
-		if($country_code == null)
+		if(is_null($country_code))
 		{
-			$countries = \DB::table('countries')->get();
-			$getCountries = array();
-			foreach($countries as $country)
-			{
-				$getCountries[$country->code] = $country->name;
-			}
-			return $getCountries;
+			$countries = \Country::lists('name', 'code');
+			return $countries;
 		}
 		else
 		{
-			$countries = \DB::table('countries')->where('code' , $country_code)->first();
-			$getCountries = $countries->name;
-			return $getCountries;
+			$country = \Country::where('code' , '=', $country_code)->first();
+			return $country;
 		}
-		
+
 	}
 
 	public function login($fields)
 	{
 		$throttleProvider = \Sentry::getThrottleProvider();
-		$throttleProvider->disable();		
+		$throttleProvider->disable();
 		$user = \Sentry::authenticate(
 			array(
 				'email' => $fields['username'] ,
 				'password' => $fields['passwords'] ,
-			) , 
+			) ,
 			false
 		);
 
 		return $user;
-		
+
 	}
 
 	public function logout()
 	{
-		if(\Sentry::check())
-			\Sentry::logout();
+		\Sentry::logout();
 	}
 
 	public function register($fields, $groupname) {
@@ -106,7 +85,6 @@ class Auth {
 
 	public function update($fields)
 	{
-		if(!\Sentry::check()) return false;
 		$user = \Sentry::getUser();
 
 		$user->first_name = $fields['first_name'];
@@ -121,14 +99,7 @@ class Auth {
 		$user->movies = $fields['movies'];
 		$user->books = $fields['books'];
 
-		if($user->save())
-		{
-			return $user;
-		}
-		else
-		{
-			return false;
-		}
+		return ($user->save() ? $user : false);
 	}
 
 	public function send_activation_email($user) {
@@ -143,10 +114,7 @@ class Auth {
 		\Mail::send('emails.auth.activateuser' , $data , function($message) use ($data)
 		{
 			$message->to($data['email'] , 'Example')->subject('email signup');
-		});	
+		});
 	}
 
-	public function registration_errors() {
-
-	}
 }
