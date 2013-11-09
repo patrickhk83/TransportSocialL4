@@ -1,0 +1,20 @@
+.thumb {
+	width:200px;
+	height:200px;
+}
+
+.datepicker {
+	z-index: 9999 !important;
+	top: 0;
+	left: 0;
+}
+
+#error_message_box {
+	margin-bottom:7px;
+	margin-left:20px;
+	color:red;
+}
+
+.required {
+	color:red;
+}
