@@ -13,10 +13,11 @@ class CreateUsersPhotosTable extends Migration {
 	public function up()
 	{
 		//
-		Schema::create('users_photos', function(Blueprint $table) {
+		Schema::create('user_photo', function(Blueprint $table) {
 			$table->increments('id');
 			$table->integer('user_id')->unsigned()->index();
 			$table->text('path');
+			$table->foreign('user_id')->references('id')->on('users');
 		});
 	}
 
@@ -27,7 +28,10 @@ class CreateUsersPhotosTable extends Migration {
 	 */
 	public function down()
 	{
-		//
+		Schema::table('user_photo', function(Blueprint $table) {
+			$table->dropForeign('user_photo_user_id_foreign');
+		});
+		Schema::drop('user_photo');
 	}
 
 }
