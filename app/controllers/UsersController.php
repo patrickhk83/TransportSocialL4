@@ -15,17 +15,17 @@ class UsersController extends BaseController {
 
 	public function auth()
 	{
-		
+
 		$validation = new Services\Validators\Login;
 		$auth = new Services\Authentication\Auth;
 
 		if($validation->passes())
 		{
-			
+
 			try
 			{
 				$user = $auth->login(Input::all());
-				
+
 			}
 			catch (Cartalyst\Sentry\Users\UserNotActivatedException $e)
 			{
@@ -40,10 +40,10 @@ class UsersController extends BaseController {
 			}
 			return Redirect::route('user.profile', array('id' => $user->id));
 			//return "1111111111111";
-					
+
 		}
 		return Redirect::back()->withInput()->withErrors($validation->errors);
-		
+
 
 	}
 
@@ -98,7 +98,7 @@ class UsersController extends BaseController {
 				if(!$user)
 					return Redirect::back()->withInput->withErrors('Failed to update profile.');
 				else
-					return Redirect::route('user.profile' , array('id' => $user->id));	
+					return Redirect::route('user.profile' , array('id' => $user->id));
 
 			}
 			catch (Cartalyst\Sentry\Users\UserExistsException $e)
@@ -121,28 +121,33 @@ class UsersController extends BaseController {
 		return Redirect::route('site.home');
 	}
 
-	public function saved_flights($id) {
-
-	}
-
 	public function profile($id) {
 		$auth = new Services\Authentication\Auth;
 		$user = $auth->getUserInfo();
-		if(!$user)
-			return View::make('users.login');
 		$country = $auth->getCountries($user->country);
-		$count  = $auth->countUserPhotos($user->id , $user->profile_pic);
-		if($count > 0)
+		$photos = $auth->getUserPhotos($user->id);
+		if(count($photos) == 0)
 		{
+
 			$profile_pic = "images/default-profile-pic.png";
-			return View::make('users.profile')->with(array('user' => $user , 'profile_pic' => $profile_pic , 'country' => $country));
+			return View::make('users.profile')->with(
+				array(
+					'user' => $user,
+					'profile_pic' => $profile_pic,
+					'country' => $country)
+				);
 		}
 		else
 		{
-			$user_photo = $auth->getUserPhotos($user->id , null);
-			$profile_pics = $auth->getUserPhotos($user->id , $user->profile_pic);
-			$profile_pic = $profile_pics->path;
-			return View::make('users.profile')->with(array('user' => $user , 'profile_pic' => $profile_pic , 'profile_pics' => $profile_pics , 'country' => $country));
+			$photos = $auth->getUserPhotos($user->id);
+			$profile_pic = $auth->getUserPhotos($user->id , $user->profile_pic)->path;
+			return View::make('users.profile')->with(
+				array(
+					'user' => $user,
+					'profile_pic' => $profile_pic,
+					'photos' => $photos,
+					'country' => $country)
+				);
 		}
 	}
 
@@ -150,7 +155,7 @@ class UsersController extends BaseController {
 	{
 		$auth = new Services\Authentication\Auth;
 		$user = $auth->getUserInfo();
-		$countries = $auth->getCountries(null);
+		$countries = $auth->getCountries();
 		return View::make('users.edit_profile')->with(array('user' => $user , 'countries' => $countries));
 	}
 
