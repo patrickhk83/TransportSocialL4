@@ -17,11 +17,19 @@ class Flight extends Eloquent {
     return $this->belongsTo('Airport', 'arrival_airport_id');
   }
 
-  public function airline() {
-    return $this->belongsTo('Airline', 'carrier_id');
+  public function carrier() {
+    return $this->belongsTo('Carrier', 'carrier_id');
   }
 
   public function passengers() {
     return $this->belongsToMany('User')->withPivot('privacy');
   }
+
+  public function addPassenger($id, $privacy) {
+    $passenger = $this->passengers()->where('user_id', '=', $id)->first();
+    if(is_null($passenger)) {
+      $this->passengers()->sync(array($id => array('privacy' => $privacy)));
+    }
+  }
+
 }
