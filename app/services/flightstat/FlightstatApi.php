@@ -21,7 +21,7 @@ abstract class FlightstatApi
 		$this->client = new Client('https://api.flightstats.com/flex/'.$this->type.'/rest/v2/json/');
 	}
 
-	public function api_call($function, $queries) {
+	public function api_call($function, $queries = array()) {
 		$this->initialize();
 
 		$request = $this->client->get($function, $this->config);

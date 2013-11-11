@@ -10,7 +10,7 @@ class FlightStatus extends FlightstatApi {
 	}
 
 	public function by_flight_id($id) {
-		return $this->api_call('flight/status/'.$id);
+		return $this->api_call('flight/status/'.$id, $this->queries);
 	}
 
 	public function by_airport($request) {
