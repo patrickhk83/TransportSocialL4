@@ -3,13 +3,6 @@
  * @param signup_url
  */
 
-function enable_profile_pic_dialog()
-{
-	$('#profile_pic_form').on("hidden.bs.modal", function()
-	{
-	});
-
-}
 
 $("document").ready(function(){
   $('.profile-pic').change(function(evt) {
