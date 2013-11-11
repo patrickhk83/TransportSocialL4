@@ -17,18 +17,18 @@ class Auth {
 		}
 		catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
 		{
-			$errors[] = "User not found";
+			$this->errors[] = "User not found";
 		}
 		return $user;
 	}
 
 	public function getUserPhotos($user_id , $photo_id = null)
 	{
-		$photos = \User::find($user_id)->photos()->get();
+		$photos = \User::find($user_id)->photos();
 		if(!is_null($photo_id)) {
-			$photos = $photos->where('id', '=', $photo_id)->first();
+			return $photos = $photos->where('id', '=', $photo_id)->first();
 		}
-		return $photos;
+		return $photos->get();
 
 	}
 
@@ -49,18 +49,46 @@ class Auth {
 
 	public function login($fields)
 	{
-		$throttleProvider = \Sentry::getThrottleProvider();
-		$throttleProvider->disable();
-		$user = \Sentry::authenticate(
-			array(
-				'email' => $fields['username'] ,
-				'password' => $fields['passwords'] ,
-			) ,
-			false
-		);
-
+		try {
+			$throttleProvider = \Sentry::getThrottleProvider();
+			$throttleProvider->disable();
+			$user = \Sentry::authenticate(
+				array(
+					'email' => $fields['username'] ,
+					'password' => $fields['passwords'] ,
+				) ,
+				false
+			);
+		}
+		catch (Cartalyst\Sentry\Users\UserNotActivatedException $e)
+		{
+		    $this->errors[] = 'User not activated.';
+		}
+		catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
+		{
+			$this->errors[] = 'User not found.';
+		}
 		return $user;
 
+	}
+
+	public function activate($activation_code, $id) {
+		try
+		{
+		    $user = \Sentry::findUserById($id);
+		    if (!$user->attemptActivation($activation_code))
+		    {
+		        $this->errors[] = "Your account was not activated";
+			}
+		}
+		catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
+		{
+		    $this->errors[] = 'User was not found.';
+		}
+		catch (Cartalyst\Sentry\Users\UserAlreadyActivatedException $e)
+		{
+		    $this->errors[] = 'User is already activated.';
+		}
 	}
 
 	public function logout()
@@ -69,13 +97,19 @@ class Auth {
 	}
 
 	public function register($fields, $groupname) {
-		$user = \Sentry::register(
+		try {
+			$user = \Sentry::register(
 			array(
 				'email' => $fields['email'] ,
 				'first_name' => $fields['first_name'] ,
 				'last_name' => $fields['last_name'] ,
 				'password' => $fields['passwords'] ,
 			));
+		}
+		catch(Cartalyst\Sentry\Users\UserExistsException $e)
+		{
+			$this->errors[] = 'User with this login already exists.';
+		}
 
 		$group = \Sentry::getGroupProvider()->findByName($groupname);
 		$user->addGroup($group);
@@ -85,21 +119,33 @@ class Auth {
 
 	public function update($fields)
 	{
-		$user = \Sentry::getUser();
+		try {
+			$user = \Sentry::getUser();
 
-		$user->first_name = $fields['first_name'];
-		$user->last_name = $fields['last_name'];
-		$user->email = $fields['email'];
-		$user->company = $fields['occupation'];
-		$user->country = $fields['country'];
-		$user->birthday = $fields['birthday'];
-		$user->about_me = $fields['about_me'];
-		$user->hobbies = $fields['hobbies'];
-		$user->musics = $fields['musics'];
-		$user->movies = $fields['movies'];
-		$user->books = $fields['books'];
+			$user->first_name = $fields['first_name'];
+			$user->last_name = $fields['last_name'];
+			$user->email = $fields['email'];
+			$user->company = $fields['occupation'];
+			$user->country = $fields['country'];
+			$user->birthday = $fields['birthday'];
+			$user->about_me = $fields['about_me'];
+			$user->hobbies = $fields['hobbies'];
+			$user->musics = $fields['musics'];
+			$user->movies = $fields['movies'];
+			$user->books = $fields['books'];
 
-		return ($user->save() ? $user : false);
+			$user->save();
+		}
+		catch (Cartalyst\Sentry\Users\UserExistsException $e)
+		{
+			$this->errors[] = 'User with this login already exists.';
+		}
+		catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
+		{
+			$this->errors[] = 'User was not found.';
+		}
+
+		return $user;
 	}
 
 	public function send_activation_email($user) {

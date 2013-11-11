@@ -5,6 +5,8 @@ class Photo extends Eloquent {
 
 	public static $rules = array();
 
+	public $timestamps = false;
+
 	public function user() {
 		return $this->belongsTo('User');
 	}

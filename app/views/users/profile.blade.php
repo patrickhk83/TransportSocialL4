@@ -1,16 +1,24 @@
 @extends('layouts.default')
+
 @section('content')
 
-	<h1 class="heading">{{$user->first_name." ".$user->last_name;}}</h1>
-	<a href="{{ URL::to('user/edit_profile')}}" class="btn btn-primary">Edit Profile</a>
-	<div class="photo">{{ HTML::image($profile_pic , null , array('class' => 'thumb')) }}</div>
+	{{ HTML::script('js/modal.js'); }}
+	{{ HTML::script('js/manageuser.js'); }}
+	<div>
+		<h1>{{$user->first_name." ".$user->last_name;}}</h1>
+		{{ link_to_route('user.edit_profile', 'Edit Profile', null, array('class' => 'btn btn-primary')) }}
+	</div>	
+	<div class="photo">
+		{{ HTML::image($profile_pic , null , array('class' => 'thumb')) }}
+		{{ link_to_route('user.edit_profile', 'Edit Profile Pic', null, array('class' => 'btn btn-primary' , 'data-toggle' => 'modal' , 'data-target' => '#profile_pic_form' , 'data-remote' => 'false')) }}
+	</div>
 	<?php if(!empty($user->company)): ?>
 	<div class="occupation">
 		<p>
-			{{ $user->company. '&nbsp;&nbsp;|&nbsp;&nbsp;' .$country; }}
+			{{ $user->company. ' | ' .$country->name; }}
 		</p>
 	</div>
-	<?php endif; ?>	
+	<?php endif; ?>
 	
 	<?php if(!empty($user->about_me)): ?>
 		<h1 class="heading">{{ trans('user_auth.my_profile_about_me'); }}</h1>
@@ -36,14 +44,14 @@
 		<p class="content">{{ $user->books; }}</p>
 	<?php endif; ?>
 
-	<?php if (isset($profile_pics) && count($profile_pics)): ?>
+	<?php if (isset($photos) && count($photos) > 0): ?>
 	<h1 class="heading">{{ trans('user_auth.my_profile_my_photos'); }}</h1>
 		<div>
-			<?php foreach ($profile_pics as $pic): ?>
-				{{ HTML::image($pic , null , array('class' => 'thumb')) }}
+			<?php foreach ($photos as $photo): ?>
+				{{ HTML::image($photo , null , array('class' => 'thumb')) }}
 			<?php endforeach; ?>
 		</div>
 	<?php endif ?>
-
-
+	
+@include('users.profile_pic');
 @stop

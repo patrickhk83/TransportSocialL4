@@ -52,4 +52,5 @@
 		</div>
 		{{ Form::submit('Submit', array('class' => 'btn btn-primary')) }}
 	{{ Form::close() }}
+	
 @stop

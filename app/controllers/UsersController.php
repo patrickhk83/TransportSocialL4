@@ -12,7 +12,6 @@ class UsersController extends BaseController {
     	return View::make('users.index');
 	}
 
-
 	public function auth()
 	{
 
@@ -21,21 +20,9 @@ class UsersController extends BaseController {
 
 		if($validation->passes())
 		{
-
-			try
-			{
-				$user = $auth->login(Input::all());
-
-			}
-			catch (Cartalyst\Sentry\Users\UserNotActivatedException $e)
-			{
-			    Session::flash('error', 'User not activated.');
-			    return Redirect::back()->withInput()->withErrors('User not activated.');
-			}
-			catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
-			{
-				Session::flash('error', 'User not found.');
-				return Redirect::back()->withInput()->withErrors('User not found.');
+			$user = $auth->login(Input::all());
+			if(count($auth->errors) > 0) {
+				return Redirect::back()->withInput()->withErrors($auth->errors);
 			}
 			return Redirect::route('user.profile', array('id' => $user->id));
 		}
@@ -60,25 +47,17 @@ class UsersController extends BaseController {
 	 */
 	public function create()
 	{
-    $validation = new Services\Validators\Register;
+    	$validation = new Services\Validators\Register;
 
 		if($validation->passes()) {
-			try
-			{
-				//Register a user.
-				$auth = new Services\Authentication\Auth;
-				$user = $auth->register(Input::all(), 'Users');
-				$auth->send_activation_email($user);
-
+			$auth = new Services\Authentication\Auth;
+			$user = $auth->register(Input::all(), 'Users');
+			if(count($auth->errors) > 0) {
+				return Redirect::back()->withInput()->withErrors($auth->errors);
 			}
-			catch(Cartalyst\Sentry\Users\UserExistsException $e)
-			{
-				Session::flash('error', 'User with this login already exists.');
-				return Redirect::back()->withInput()->withErrors('User with this login already exists.');
-			}
-			return Redirect::route('user.profile', array('id' => $user->id));
+			$auth->send_activation_email($user);
+			return Redirect::route('site.home');
 		}
-
 		return Redirect::back()->withInput()->withErrors($validation->errors);
 	}
 
@@ -88,27 +67,14 @@ class UsersController extends BaseController {
 
 		if($validation->passes())
 		{
-			try
-			{
-				$auth = new Services\Authentication\Auth;
-				$user = $auth->update(Input::all());
-				if(!$user)
-					return Redirect::back()->withInput->withErrors('Failed to update profile.');
-				else
-					return Redirect::route('user.profile' , array('id' => $user->id));
-
-			}
-			catch (Cartalyst\Sentry\Users\UserExistsException $e)
-			{
-				Session::flash('error', 'User with this login already exists.');
-				return Redirect::back()->withInput()->withErrors('User with this login already exists.');
-			}
-			catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
-			{
-				Session::flash('error', 'User was not found.');
-				return Redirect::back()->withInput()->withErrors('User was not found.');
-			}
+			$auth = new Services\Authentication\Auth;
+			$user = $auth->update(Input::all());
+			if(count($auth->errors) > 0) {
+				return Redirect::back()->withInput->withErrors($auth->errors);
+			}	
+			return Redirect::route('user.profile' , array('id' => $user->id));	
 		}
+		return Redirect::back()->withInput->withErrors($validation->errors);
 	}
 
 	public function logout() {
@@ -119,39 +85,57 @@ class UsersController extends BaseController {
 
 	public function profile($id) {
 		$auth = new Services\Authentication\Auth;
-		$user = $auth->getUserInfo();
-		$country = $auth->getCountries($user->country);
-		$photos = $auth->getUserPhotos($user->id);
-		if(count($photos) == 0)
+		$data['user'] = $auth->getUserInfo();
+		$data['photos'] = $auth->getUserPhotos($data['user']->id);
+		if(isset($data['user']->country)) {
+			$country = $auth->getCountries($data['user']->country);
+			$data['country'] = $country;
+		}
+		if(count($data['photos']) == 0)
 		{
-			$profile_pic = "images/default-profile-pic.png";
-			return View::make('users.profile')->with(
-				array(
-					'user' => $user,
-					'profile_pic' => $profile_pic,
-					'country' => $country)
-				);
+			$data['profile_pic'] = "images/default-profile-pic.png";
+			return View::make('users.profile')->with($data);
 		}
 		else
 		{
-			$photos = $auth->getUserPhotos($user->id);
-			$profile_pic = $auth->getUserPhotos($user->id , $user->profile_pic)->path;
-			return View::make('users.profile')->with(
-				array(
-					'user' => $user,
-					'profile_pic' => $profile_pic,
-					'photos' => $photos,
-					'country' => $country)
-				);
+			$data['profile_pic'] = $auth->getUserPhotos($data['user']->id , $data['user']->profile_pic)->path;
+			return View::make('users.profile')->with($data);
 		}
 	}
 
 	public function edit_profile()
 	{
 		$auth = new Services\Authentication\Auth;
-		$user = $auth->getUserInfo();
-		$countries = $auth->getCountries();
-		return View::make('users.edit_profile')->with(array('user' => $user , 'countries' => $countries));
+		$data['user'] = $auth->getUserInfo();
+		$data['countries'] = $auth->getCountries();
+		return View::make('users.edit_profile')->with($data);
+	}
+
+	public function activate($id, $activation_code) {
+		$auth = new Services\Authentication\Auth;
+		$auth->activate($activation_code, $id);
+		if(count($auth->errors) > 0) {
+			return View::make('users.activate')->with(array('error' => 'Your account could not be activated'));
+		}
+		return View::make('users.activate')->with(array('success' => 'Your account has been activated'));
+	}
+
+	public function edit_profile_pic()
+	{
+		if(Input::hasFile('profile_pic'))
+		{
+			$auth = new Services\Authentication\Auth;
+			$image = new Services\Image;
+			$user = $auth->getUserInfo();
+			$image->upload(Input::file('profile_pic') , $user->id , 'profile');
+			if(count($image->errors) > 0) {
+				Redirect::back()->withErrors($image->errors);
+			}
+			$user = User::find($user->id);
+			$user->profilePicture()->save($image->create($image->path, $user->id));	
+			$user->save();
+		}
+		
 	}
 
 }

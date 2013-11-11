@@ -17,3 +17,8 @@ Route::group(array('before' => 'auth'), function()
 	Route::post('user/profile/edit' , array('as' => 'user.update' , 'uses' => 'UsersController@update'));
 });
 
+Route::get('user/{id}/activate/{activation_code}', array('as' => 'user.activate', 'uses' => 'UsersController@activate'))
+		->where(array('id' => '[0-9]+'));
+
+Route::post('user/profile/edit_profile_pic' , array('as' => 'user.edit_profile_pic' , 'uses' => 'UsersController@edit_profile_pic'));		
+
