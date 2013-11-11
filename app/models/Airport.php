@@ -10,4 +10,8 @@ class Airport extends Eloquent {
   public function flights() {
     return $this->hasMany('Flight');
   }
+
+  public function scopefindByIata($query, $iata) {
+  	return $query->where('airport_code', '=', $iata);
+  }
 }
