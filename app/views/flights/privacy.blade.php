@@ -1,6 +1,6 @@
 @extends('layouts.default')
 @section('content')
-  {{ Form::open(array('action', array('FlightsController@save_flight' => $flight->flightId)) }}
+  {{ Form::open(array('route' => array('flight.save', $flightId))) }}
     @include('_partials.errors')
     <div class="form-group">
       <p>Before you save your flight, select one of the option to determine who sees you attending this flight.</p>
