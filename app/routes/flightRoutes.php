@@ -6,14 +6,19 @@ Route::any('search/flights/by-flight-num', array('as' => 'flights.by_flight_num'
 
 Route::group(array('before' => 'auth'), function()
 {
+	Route::any('flight/{id}/privacy', array('as' => 'flight.privacy', 'uses' => 'FlightsController@privacy'))
+			->where(array('id' => '[0-9]+'));;
+
 	Route::any('flight/{id}/save', array('as' => 'flight.save', 'uses' => 'FlightsController@save'))
-			 ->where(array('id' => '[0-9]+'));;
+			 ->where(array('id' => '[0-9]+'));
 
 	Route::any('flight/{id}/delete', array('as' => 'flight.delete', 'uses' => 'FlightsController@delete'))
-			 ->where(array('id' => '[0-9]+'));;
+			 ->where(array('id' => '[0-9]+'));
+
+	Route::get('user/{id}/flights', array('as' => 'user.flights', 'uses' => 'FlightsController@saved_flights'))
+		   ->where(array('id' => '[0-9]+'));
 });
 
-Route::get('user/{id}/flights', array('as' => 'user.flights', 'uses' => 'FlightsController@saved_flights'))
-		 ->where(array('id' => '[0-9]+'));
+
 
 
