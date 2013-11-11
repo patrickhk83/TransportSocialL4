@@ -24,7 +24,7 @@ class CreateFlightsTable extends Migration {
 		});
 
 		Schema::table('flights', function(Blueprint $table) {
-    	$table->foreign('carrier_id')->references('id')->on('airlines');
+    	$table->foreign('carrier_id')->references('id')->on('carriers');
       $table->foreign('arrival_airport_id')->references('id')->on('airports');
       $table->foreign('departure_airport_id')->references('id')->on('airports');
 		});
