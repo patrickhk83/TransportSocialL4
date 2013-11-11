@@ -5,7 +5,7 @@
     @foreach($flights as $flight)
       <li class="list-group-item">
         <div class="flightNumber">
-          {{ $flight->carrier->fs }}
+          {{ $flight->carrier->iata }}
           {{ $flight->flightNumber }}
         </div>
         <div class="carrier">
@@ -16,11 +16,11 @@
         </div>
 
         <div class="times">
-          <p>Departure Time: {{ date('d/m/Y h:m', strtotime($flight->departureDate->dateLocal)) }}</p>
-          <p>Arrival Time: {{ date('d/m/Y h:m', strtotime($flight->arrivalDate->dateLocal)) }}</p>
+          <p>Departure Time: {{ date('d/m/Y h:m', strtotime($flight->departureDate)) }}</p>
+          <p>Arrival Time: {{ date('d/m/Y h:m', strtotime($flight->arrivalDate)) }}</p>
         </div>
 
-        @if($flight->passengers > 0)
+        @if(count($flight->passengers) > 0)
           <p>
             @foreach($flight->passengers as $passenger)
               <img src="/assets/images/default-profile-pic.png" width="20" height="20">
@@ -28,12 +28,12 @@
           </p>
         @endif
 
-        @if(!Auth::guest())
+        @if(Sentry::check())
           <div>
-            @if(!$flight->is_saved)
-              {{ link_to_route('flight.privacy', 'Save', array($flight->flightId), array('class' => 'btn btn-primary')) }}
+            @if(!$flight->saved)
+              {{ link_to_route('flight.privacy', 'Save', array($flight->id), array('class' => 'btn btn-primary')) }}
             <?php else: ?>
-              {{ link_to_route('flight.delete', 'Delete', array($flight->flightId), array('class' => 'btn btn-primary')) }}
+              {{ link_to_route('flight.delete', 'Delete', array($flight->id), array('class' => 'btn btn-primary')) }}
             @endif
           </div>
         @endif
