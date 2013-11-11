@@ -10,4 +10,8 @@ class Photo extends Eloquent {
 	public function user() {
 		return $this->belongsTo('User');
 	}
+
+	public function profile_user() {
+		return $this->hasOne('user', 'profile_pic');
+	}
 }

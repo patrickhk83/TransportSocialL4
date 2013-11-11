@@ -71,8 +71,8 @@ class UsersController extends BaseController {
 			$user = $auth->update(Input::all());
 			if(count($auth->errors) > 0) {
 				return Redirect::back()->withInput->withErrors($auth->errors);
-			}	
-			return Redirect::route('user.profile' , array('id' => $user->id));	
+			}
+			return Redirect::route('user.profile' , array('id' => $user->id));
 		}
 		return Redirect::back()->withInput->withErrors($validation->errors);
 	}
@@ -132,10 +132,11 @@ class UsersController extends BaseController {
 				Redirect::back()->withErrors($image->errors);
 			}
 			$user = User::find($user->id);
-			$user->profilePicture()->save($image->create($image->path, $user->id));	
-			$user->save();
+			$photo = $image->create($image->path, $user->id);
+			$photo->profile_user()->save($user);
+			$photo->save();
 		}
-		
+
 	}
 
 }
