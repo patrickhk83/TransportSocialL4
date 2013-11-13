@@ -1,10 +1,22 @@
 <?php
 
+use Repositories\Flight\FlightRepositoryInterface as Flight;
+use Repositories\Carrier\CarrierRepositoryInterface as Carrier;
+use Repositories\Airport\AirportRepositoryInterface as Airport;
+use Repositories\User\UserRepositoryInterface as User;
+
 class FlightsController extends BaseController {
 
 	protected $flights;
+	protected $carriers;
+	protected $airports;
+	protected $users;
 
-	public function __construct() {
+	public function __construct(Flight $flights, Carrier $carriers, Airport $airports, User $users) {
+		$this->flights = $flights;
+		$this->carriers = $carriers;
+		$this->airports = $airports;
+		$this->users = $users;
 	}
 
 	public function by_airport() {
@@ -37,7 +49,7 @@ class FlightsController extends BaseController {
 			$flights = $flightStatAPI->{$function_name}(Input::all())->flightStatuses;
 			$flights = $this->add_variables($flights);
 			if(Sentry::check()) {
-				$this->saved($flights);
+				$this->saved($flights, false);
 			}
 			$this->getPassengers($flights);
 			$data['flights'] = $flights;
@@ -55,10 +67,15 @@ class FlightsController extends BaseController {
 		return $flights;
 	}
 
-	public function saved($flights) {
+	public function saved($flights, $databaseCall) {
 		foreach($flights as $flight) {
-			$savedFlight = User::find(Sentry::getUser()->id)->flights()->where('flight_id', '=', $flight->flightId)->first();
-			$flight->saved = (!is_null($savedFlight) ? true : false);
+			if(!$databaseCall) {
+				$savedFlight = $this->users->hasFlight($flight->flightId, Sentry::getUser()->id);
+				$flight->saved = (!is_null($savedFlight) ? true : false);
+			}
+			else {
+				$flight->saved = true;
+			}
 		}
 		return $flights;
 	}
@@ -66,8 +83,8 @@ class FlightsController extends BaseController {
 	public function getPassengers($flights) {
 		foreach($flights as $flight) {
 			$flight->passengers = array();
-			if(Flight::find($flight->flightId) != null) {
-				$flight->passengers = Flight::find($flight->flightId)->passengers()->get();
+			if($this->flights->find($flight->flightId) != null) {
+				$flight->passengers = $this->flights->getPassengers($flight->flightId);
 			}
 		}
 		return $flights;
@@ -79,29 +96,32 @@ class FlightsController extends BaseController {
 	}
 
 	public function saved_flights($id) {
-		$flights = User::find($id)->flights()->get();
-		$this->saved($flights);
+		$flights = $this->users->flights($id);
+		$this->saved($flights, true);
 		$this->getPassengers($flights);
 		$data['flights'] = $flights;
 		return View::make('flights.index', $data);
 	}
 
 	public function save($id) {
-		$flight = Flight::find($id);
+		$flight = $this->flights->find($id);
 		if(is_null($flight)) {
 			$flightStatAPI = new Services\Flightstat\FlightStatus;
 			$result = $flightStatAPI->by_flight_id($id)->flightStatus;
-			$flight = new Flight;
-			$flight->id = $result->flightId;
-			$flight->number = $result->flightNumber;
-			$flight->arrivalTime = $result->departureDate->dateLocal;
-			$flight->departureTime = $result->arrivalDate->dateLocal;
-			$flight->carrier()->associate(Carrier::findByIata($result->carrier->iata)->first());
-			$flight->departureAirport()->associate(Airport::findByIata($result->departureAirport->iata)->first());
-			$flight->arrivalAirport()->associate(Airport::findByIata($result->arrivalAirport->iata)->first());
-			$flight->save();
+			$flightData = array(
+				'id' => $result->flightId,
+				'number' => $result->flightNumber,
+				'arrivalTime' => $result->arrivalDate->dateLocal,
+				'departureTime' => $result->departureDate->dateLocal,
+			);
+			$relationships = array(
+				'carrier' => $this->carriers->findByIata($result->carrier->iata),
+				'arrivalAirport' => $this->airports->findByIata($result->arrivalAirport->iata),
+				'departureAirport' => $this->airports->findByIata($result->departureAirport->iata)
+			);
+			$flight = $this->flights->create($flightData, $relationships);
 		}
-		$flight->addPassenger(Sentry::getUser()->id, Input::get('privacy'));
+		$this->flights->addPassenger($flight->id, Sentry::getUser()->id, Input::get('privacy'));
 		return Redirect::route('user.flights', array(Sentry::getUser()->id));
 	}
 
