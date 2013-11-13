@@ -22,7 +22,7 @@ class AddUserCustomFields extends Migration {
 			$table->string('musics')->nullable();
 			$table->string('movies')->nullable();
 			$table->string('books')->nullable();
-			$table->integer('profile_pic');
+			$table->integer('profile_pic')->nullable();
 		});
 	}
 
