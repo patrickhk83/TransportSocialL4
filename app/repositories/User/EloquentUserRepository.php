@@ -24,4 +24,14 @@ class EloquentUserRepository implements UserRepositoryInterface {
   	return User::find($userId)->flights()->where('flight_id', '=', $flightId)->first();
   }
 
+  public function getPhotos($userId)
+  {
+    return User::find($userId)->photos()->get();
+  }
+
+  public function getProfilePic($userId) {
+    $user = User::find($userId);
+    return $user->photos()->where('id', '=', $user->profile_pic)->first();
+  }
+
 }

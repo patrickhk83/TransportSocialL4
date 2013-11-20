@@ -10,4 +10,8 @@ interface UserRepositoryInterface {
 
   public function hasFlight($flightId, $userId);
 
+  public function getPhotos($userId);
+
+  public function getProfilePic($userId);
+
 }
