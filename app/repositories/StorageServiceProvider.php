@@ -22,6 +22,18 @@ class StorageServiceProvider extends ServiceProvider {
       'Repositories\User\UserRepositoryInterface',
       'Repositories\User\EloquentUserRepository'
     );
+    $this->app->bind(
+      'Repositories\Photo\PhotoRepositoryInterface',
+      'Repositories\Photo\EloquentPhotoRepository'
+    );
+    $this->app->bind(
+      'Repositories\Message\MessageRepositoryInterface',
+      'Repositories\Message\EloquentMessageRepository'
+    );
+    $this->app->bind(
+      'Repositories\Contact\ContactRepositoryInterface',
+      'Repositories\Contact\EloquentContactRepository'
+    );
   }
 
 }
