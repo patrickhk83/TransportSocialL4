@@ -1,7 +1,17 @@
 <?php
 
+use Repositories\User\UserRepositoryInterface as User;
+use Repositories\Photo\PhotoRepositoryInterface as Photo;
+
 class UsersController extends BaseController {
 
+	protected $users;
+	protected $photos;
+
+	public function __construct(User $users, Photo $photos) {
+		$this->users = $users;
+		$this->photos = $photos;
+	}
 	/**
 	 * Display a listing of the resource.
 	 *
@@ -86,12 +96,11 @@ class UsersController extends BaseController {
 	public function profile($id) {
 		$auth = new Services\Authentication\Auth;
 		$data['user'] = $auth->getUserInfo();
-		$data['photos'] = $auth->getUserPhotos($data['user']->id);
+		$data['photos'] = $this->users->getPhotos($data['user']->id);
 		if(isset($data['user']->country)) {
-			$country = $auth->getCountries($data['user']->country);
-			$data['country'] = $country;
+			$data['country'] = $auth->getCountries($data['user']->country);
 		}
-		if(count($data['photos']) == 0)
+		if(count($data['photos']) == 0 || $data['user']->profile_pic == null )
 		{
 			$data['profile_pic'] = "images/default-profile-pic.png";
 			return View::make('users.profile')->with($data);
@@ -131,11 +140,18 @@ class UsersController extends BaseController {
 			if(count($image->errors) > 0) {
 				Redirect::back()->withErrors($image->errors);
 			}
-			$user = User::find($user->id);
-			$photo = $image->create($image->path, $user->id);
-			$photo->profile_user()->save($user);
-			$photo->save();
+			$user = $this->users->find($user->id);
+			$photo = $this->photos->create(
+			array(
+				'path' => $image->path,
+				'user' => $user
+			));
 		}
+
+	}
+
+	public function add_photo()
+	{
 
 	}
 
