@@ -25,4 +25,5 @@ return array(
 	'create_user_movies'					=>	'Movies: ',
 	'create_user_books'						=>	'Books: ',	
 	'create_user_my_profile_pic_info'				=>	'My Profile Picture',	
+	'create_user_photos_info'				=>	'My Photos'
 );
