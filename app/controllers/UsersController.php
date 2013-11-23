@@ -26,7 +26,7 @@ class UsersController extends BaseController {
 	{
 
 		$validation = new Services\Validators\Login;
-		$auth = new Services\Authentication\Auth;
+		$auth = new Services\Auth;
 
 		if($validation->passes())
 		{
@@ -60,7 +60,7 @@ class UsersController extends BaseController {
     	$validation = new Services\Validators\Register;
 
 		if($validation->passes()) {
-			$auth = new Services\Authentication\Auth;
+			$auth = new Services\Auth;
 			$user = $auth->register(Input::all(), 'Users');
 			if(count($auth->errors) > 0) {
 				return Redirect::back()->withInput()->withErrors($auth->errors);
@@ -77,7 +77,7 @@ class UsersController extends BaseController {
 
 		if($validation->passes())
 		{
-			$auth = new Services\Authentication\Auth;
+			$auth = new Services\Auth;
 			$user = $auth->update(Input::all());
 			if(count($auth->errors) > 0) {
 				return Redirect::back()->withInput->withErrors($auth->errors);
@@ -88,40 +88,34 @@ class UsersController extends BaseController {
 	}
 
 	public function logout() {
-		$auth = new Services\Authentication\Auth;
+		$auth = new Services\Auth;
 		$auth->logout();
 		return Redirect::route('site.home');
 	}
 
 	public function profile($id) {
-		$auth = new Services\Authentication\Auth;
+		$auth = new Services\Auth;
+
 		$data['user'] = $auth->getUserInfo();
 		$data['photos'] = $this->users->getPhotos($data['user']->id);
+		$picture = $this->users->getProfilePic($data['user']->id);
+		$data['profile_pic'] = (count($picture) > 0 ? $picture->path : 'images/default-profile-pic.png');
 		if(isset($data['user']->country)) {
 			$data['country'] = $auth->getCountries($data['user']->country);
 		}
-		if(count($data['photos']) == 0 || $data['user']->profile_pic == null )
-		{
-			$data['profile_pic'] = "images/default-profile-pic.png";
-			return View::make('users.profile')->with($data);
-		}
-		else
-		{
-			$data['profile_pic'] = $auth->getUserPhotos($data['user']->id , $data['user']->profile_pic)->path;
-			return View::make('users.profile')->with($data);
-		}
+		return View::make('users.profile')->with($data);
 	}
 
 	public function edit_profile()
 	{
-		$auth = new Services\Authentication\Auth;
+		$auth = new Services\Auth;
 		$data['user'] = $auth->getUserInfo();
 		$data['countries'] = $auth->getCountries();
 		return View::make('users.edit_profile')->with($data);
 	}
 
 	public function activate($id, $activation_code) {
-		$auth = new Services\Authentication\Auth;
+		$auth = new Services\Auth;
 		$auth->activate($activation_code, $id);
 		if(count($auth->errors) > 0) {
 			return View::make('users.activate')->with(array('error' => 'Your account could not be activated'));
@@ -133,19 +127,15 @@ class UsersController extends BaseController {
 	{
 		if(Input::hasFile('profile_pic'))
 		{
-			$auth = new Services\Authentication\Auth;
+			$auth = new Services\Auth;
 			$image = new Services\Image;
 			$user = $auth->getUserInfo();
 			$image->upload(Input::file('profile_pic') , $user->id , 'profile');
 			if(count($image->errors) > 0) {
 				Redirect::back()->withErrors($image->errors);
 			}
-			$user = $this->users->find($user->id);
-			$photo = $this->photos->create(
-			array(
-				'path' => $image->path,
-				'user' => $user
-			));
+			$photo = $this->photos->create(array('path' => $image->path));
+			$user = $this->users->saveProfilePic($photo, $user->id);
 		}
 
 	}
