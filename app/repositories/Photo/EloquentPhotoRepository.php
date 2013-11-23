@@ -14,12 +14,11 @@ class EloquentPhotoRepository implements PhotoRepositoryInterface {
     return Photo::find($id);
   }
 
-  public function create($fields) 
+  public function create($fields)
   {
     $photo = new Photo;
     $photo->path = $fields['path'];
-    $photo->user_id = $fields['user']->id;
     $photo->save();
     return $photo;
-  } 
+  }
 }
