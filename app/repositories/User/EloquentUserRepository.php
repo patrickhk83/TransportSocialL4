@@ -31,7 +31,29 @@ class EloquentUserRepository implements UserRepositoryInterface {
 
   public function getProfilePic($userId) {
     $user = User::find($userId);
-    return $user->photos()->where('id', '=', $user->profile_pic)->first();
+    return $user->profilePicture()->first();
   }
 
+  public function saveProfilePic($photo, $userId) {
+    $photo->type = $photo::PROFILE;
+    $photo->save();
+    $user = $this->find($userId);
+    $user->profilePicture()->save($photo);
+
+  }
+
+  public function add_contact($fields) {
+    $user = User::find($fields['user_id']);
+    $user->contacts()->attach($fields['contact_id'],
+      array(
+        'contact_name' => $fields['contact_name'],
+        'status' => $fields['contact_status']
+      )
+    );
+  }
+
+  public function get_contacts($userId) {
+    $user = User::find($userId);
+    return $user->contacts()->select('user_id', 'contact_id', 'contact_name', 'status')->get();
+  }
 }

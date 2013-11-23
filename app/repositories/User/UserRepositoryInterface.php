@@ -14,4 +14,10 @@ interface UserRepositoryInterface {
 
   public function getProfilePic($userId);
 
+  public function add_contact($fields);
+
+  public function get_contacts($userId);
+
+  public function saveProfilePic($photo, $userId);
+
 }
