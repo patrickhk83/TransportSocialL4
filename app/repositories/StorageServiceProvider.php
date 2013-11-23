@@ -30,10 +30,6 @@ class StorageServiceProvider extends ServiceProvider {
       'Repositories\Message\MessageRepositoryInterface',
       'Repositories\Message\EloquentMessageRepository'
     );
-    $this->app->bind(
-      'Repositories\Contact\ContactRepositoryInterface',
-      'Repositories\Contact\EloquentContactRepository'
-    );
   }
 
 }
