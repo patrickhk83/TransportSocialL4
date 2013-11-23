@@ -1,4 +1,4 @@
-<?php namespace Services\Authentication;
+<?php namespace Services;
 
 
 class Auth {
@@ -15,7 +15,7 @@ class Auth {
 		{
 			$user = \Sentry::getUser();
 		}
-		catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
+		catch (\Cartalyst\Sentry\Users\UserNotFoundException $e)
 		{
 			$this->errors[] = "User not found";
 		}
@@ -60,11 +60,11 @@ class Auth {
 				false
 			);
 		}
-		catch (Cartalyst\Sentry\Users\UserNotActivatedException $e)
+		catch (\Cartalyst\Sentry\Users\UserNotActivatedException $e)
 		{
 		    $this->errors[] = 'User not activated.';
 		}
-		catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
+		catch (\Cartalyst\Sentry\Users\UserNotFoundException $e)
 		{
 			$this->errors[] = 'User not found.';
 		}
@@ -79,13 +79,13 @@ class Auth {
 		    if (!$user->attemptActivation($activation_code))
 		    {
 		        $this->errors[] = "Your account was not activated";
-			}
+				}
 		}
-		catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
+		catch (\Cartalyst\Sentry\Users\UserNotFoundException $e)
 		{
 		    $this->errors[] = 'User was not found.';
 		}
-		catch (Cartalyst\Sentry\Users\UserAlreadyActivatedException $e)
+		catch (\Cartalyst\Sentry\Users\UserAlreadyActivatedException $e)
 		{
 		    $this->errors[] = 'User is already activated.';
 		}
@@ -106,7 +106,7 @@ class Auth {
 				'password' => $fields['passwords'] ,
 			));
 		}
-		catch(Cartalyst\Sentry\Users\UserExistsException $e)
+		catch(\Cartalyst\Sentry\Users\UserExistsException $e)
 		{
 			$this->errors[] = 'User with this login already exists.';
 		}
@@ -136,11 +136,11 @@ class Auth {
 
 			$user->save();
 		}
-		catch (Cartalyst\Sentry\Users\UserExistsException $e)
+		catch (\Cartalyst\Sentry\Users\UserExistsException $e)
 		{
 			$this->errors[] = 'User with this login already exists.';
 		}
-		catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
+		catch (\Cartalyst\Sentry\Users\UserNotFoundException $e)
 		{
 			$this->errors[] = 'User was not found.';
 		}
