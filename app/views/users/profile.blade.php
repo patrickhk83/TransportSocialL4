@@ -12,7 +12,7 @@
 		{{ link_to_route('user.edit_profile', 'Edit Profile', null, array('class' => 'btn btn-primary')) }}
 	</div>
 	<div class="photo">
-		{{ HTML::image($profile_pic , null , array('class' => 'thumb')) }}
+		{{ HTML::image($profile_pic, null , array('class' => 'thumb')) }}
 		{{ link_to_route('user.edit_profile', 'Edit Profile Pic', null, array('class' => 'btn btn-primary' , 'data-toggle' => 'modal' , 'data-target' => '#profile_pic_form' , 'data-remote' => 'false')) }}
 	</div>
 	@if(!empty($user->company))
@@ -49,9 +49,7 @@
 	<h1 class="heading">{{ trans('user_auth.my_profile_my_photos'); }}</h1>
 		<div>
 			@foreach ($photos as $photo)
-				@if($photo->id != $user->profile_pic)
-					{{ HTML::image($photo , null , array('class' => 'thumb')) }}
-				@endif
+					{{ HTML::image($photo->path , null , array('class' => 'thumb')) }}
 			@endforeach
 		</div>
 	@endif
