@@ -3,11 +3,14 @@
   <head>
     {{ HTML::style("//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css") }}
     {{ HTML::style("//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css") }}
-    {{ HTML::style("css/style.css"); }}
+    {{ HTML::style("css/style.css") }}
+    {{ HTML::style('css/jquery-ui.css') }}
+    @yield('stylesheets')
 
-    {{ HTML::script("http://code.jquery.com/jquery-latest.min.js"); }}
-    {{ Html::script("http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.js") }}
+    {{ HTML::script("http://code.jquery.com/jquery-latest.min.js") }}
+    {{ Html::script("http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js") }}
     {{ HTML::script("//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js") }}
+    @yield('scripts')
 
     <meta charset="UTF-8" />
     <title>
