@@ -1,19 +1,36 @@
 <?php
-
 class TestCase extends Illuminate\Foundation\Testing\TestCase {
 
-	/**
-	 * Creates the application.
-	 *
-	 * @return Symfony\Component\HttpKernel\HttpKernelInterface
-	 */
-	public function createApplication()
-	{
-		$unitTesting = true;
+  /**
+   * Default preparation for each test
+   */
+  public function setUp()
+  {
+    parent::setUp();
 
-		$testEnvironment = 'testing';
+    $this->prepareForTests();
+  }
 
-		return require __DIR__.'/../../bootstrap/start.php';
-	}
+  /**
+   * Creates the application.
+   *
+   * @return Symfony\Component\HttpKernel\HttpKernelInterface
+   */
+  public function createApplication()
+  {
+    $unitTesting = true;
 
+    $testEnvironment = 'testing';
+
+    return require __DIR__.'/../../bootstrap/start.php';
+  }
+
+  /**
+   * Migrate the database
+   */
+  private function prepareForTests()
+  {
+  	Artisan::call('migrate', array('--package' => 'Cartalyst/Sentry'));
+    Artisan::call('migrate');
+  }
 }
