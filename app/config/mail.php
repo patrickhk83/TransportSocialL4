@@ -15,7 +15,7 @@ return array(
 	|
 	*/
 
-	'driver' => 'mail',
+	'driver' => 'smtp',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -80,7 +80,7 @@ return array(
 	|
 	*/
 
-	'username' => 'transportsocial@gmail.com',
+	'username' => 'justinnfavaloro@gmail.com',
 
 	/*
 	|--------------------------------------------------------------------------
