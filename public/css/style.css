@@ -1,5 +1,5 @@
 .thumb {
-	
+
 	height:200px;
 }
 
@@ -17,4 +17,16 @@
 
 .required {
 	color:red;
+}
+
+.pac-container {
+    background-color: #FFF;
+    z-index: 20;
+    position: fixed;
+    display: inline-block;
+    float: left;
+}
+
+.ui-autocomplete {
+    z-index: 1051 !important;
 }
