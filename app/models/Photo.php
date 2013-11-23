@@ -5,13 +5,17 @@ class Photo extends Eloquent {
 
 	public static $rules = array();
 
+  public $fillable = array('*');
+
 	public $timestamps = false;
 
-	public function user() {
-		return $this->belongsTo('User');
-	}
+  const PROFILE = 'profile';
+  const PHOTO = 'photo';
 
-	public function profile_user() {
-		return $this->hasOne('user', 'profile_pic');
-	}
+  protected $hidden = array('imageable_type');
+
+  public function imageable()
+  {
+    return $this->morphTo();
+  }
 }
