@@ -54,18 +54,24 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 		return $this->belongsToMany('Flight')->withPivot('privacy');
 	}
 
-	public function photos()
-	{
-		return $this->hasMany('Photo');
+	public function photos() {
+		return $this->morphMany('Photo', 'imageable')->where('type', 'photo');
 	}
 
 	public function profilePicture() {
-		return $this->belongsTo('Photo');
+		return $this->morphOne('Photo', 'imageable')->where('type', 'profile');
 	}
 
-	public function contacts()
-	{
-		return $this->hasMany('Contact');
+  public function contacts() {
+  	return $this->belongsToMany('User', 'contacts', 'user_id', 'contact_id')->withPivot('status', 'contact_name');
+  }
+
+  public function messages() {
+		return $this->hasMany('Message');
+	}
+
+	public function conversations() {
+		return $this->belongsToMany('Conversation');
 	}
 
 }
