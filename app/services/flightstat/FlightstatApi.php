@@ -8,7 +8,7 @@ abstract class FlightstatApi
 	protected $config;
 	private $type;
 
-	public function __contruct($type) {
+	public function __construct($type) {
 		$this->type = $type;
 		$this->config = array(
       'appId' => 'bf28d4a0',
