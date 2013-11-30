@@ -19,4 +19,11 @@ class EloquentCarrierRepository implements CarrierRepositoryInterface {
   	return Carrier::where('airline_code', '=', $iata)->first();
   }
 
+  public function findByName($name) {
+    return Carrier::where('name', '=', $name)->first();
+  }
+
+  public function suggest($term) {
+    return Carrier::where('name', 'like', '%'.$term.'%')->get(array('name'));
+  }
 }

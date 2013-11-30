@@ -19,4 +19,11 @@ class EloquentAirportRepository implements AirportRepositoryInterface {
   	return Airport::where('airport_code', '=', $iata)->first();
   }
 
+  public function findByName($name) {
+    return Airport::where('name', '=', $name)->first();
+  }
+
+  public function suggest($term) {
+    return Airport::where('name', 'like', '%'.$term.'%')->get(array('name', 'id'));
+  }
 }

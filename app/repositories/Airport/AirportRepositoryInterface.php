@@ -8,4 +8,8 @@ interface AirportRepositoryInterface {
 
   public function findByIata($iata);
 
+  public function findByName($name);
+
+  public function suggest($term);
+
 }
