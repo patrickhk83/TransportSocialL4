@@ -1,10 +1,10 @@
 @extends('layouts.default')
 @section('content')
   @include('_partials.errors')
-  {{ Form::open(array('action' => 'FlightsController@by_airport'))}}
+  {{ Form::open(array('route' => 'flights.by_airport'))}}
     <div class="form-group">
       <label for="arrivalAirportCode">Airport Code</label>
-  		{{ Form::text('arrivalAirportCode', null, array('class' => 'form-control')) }}
+  		{{ Form::text('arrivalAirportCode', null, array('class' => 'form-control', 'id' => 'arrivalAirportCode')) }}
     </div>
     <div class="form-group">
       <label for="Date">Date</label>
@@ -30,3 +30,14 @@
     </div>
   {{ Form::close() }}
 @stop
+
+@include('_partials.assets.datepicker')
+
+@section('scripts')
+  <script>
+    var url = "{{ URL::route('airports.suggest') }}";
+    var selector = "#arrivalAirportCode";
+  </script>
+@stop
+
+<?php Asset::container('assets')->add('autocomplete','js/autocomplete.js'); ?>

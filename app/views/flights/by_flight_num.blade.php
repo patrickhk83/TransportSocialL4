@@ -4,7 +4,7 @@
   {{ Form::open(array('route' => 'flights.by_flight_num'))}}
     <div class="form-group">
       <label for="carrierCode">Carrier</label>
-  		{{ Form::text('carrierCode', null, array('class' => 'form-control')) }}
+  		{{ Form::text('carrierCode', null, array('class' => 'form-control', 'id' => 'carrierCode')) }}
     </div>
     <div class="form-group">
       <label for="flightNumber">Flight Number</label>
@@ -22,3 +22,14 @@
     </div>
   {{ Form::close() }}
 @stop
+
+@include('_partials.assets.datepicker')
+
+@section('scripts')
+  <script>
+    var url = "{{ URL::route('carriers.suggest') }}";
+    var selector = "#carrierCode";
+  </script>
+@stop
+
+<?php Asset::container('assets')->add('autocomplete', 'js/autocomplete.js') ?>
