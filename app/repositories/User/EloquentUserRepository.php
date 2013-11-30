@@ -56,4 +56,8 @@ class EloquentUserRepository implements UserRepositoryInterface {
     $user = User::find($userId);
     return $user->contacts()->select('user_id', 'contact_id', 'contact_name', 'status')->get();
   }
+
+  public function get_conversations($userId) {
+    return $this->find($userId)->conversations()->get();
+  }
 }

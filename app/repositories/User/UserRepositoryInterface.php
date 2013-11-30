@@ -20,4 +20,6 @@ interface UserRepositoryInterface {
 
   public function saveProfilePic($photo, $userId);
 
+  public function get_conversations($userId);
+
 }
