@@ -1,12 +1,16 @@
 @extends('layouts.default')
 
 @section('scripts')
-	{{ HTML::script('js/modal.js') }}
 	<script>
 		var url = "{{ URL::route('messages.suggest_user') }}";
+		var selector = "#user_name";
 	</script>
-	{{ HTML::script('js/suggest_user.js') }}
 @stop
+
+<?php
+	Asset::container('assets')->add('modal','js/modal.js');
+	Asset::container('assets')->add('autocomplete','js/autocomplete.js');
+?>
 
 @section('content')
 
@@ -71,7 +75,9 @@
 								<td>
 									{{ $contact->contact_name; }}
 								</td>
-								<td></td>
+								<td>
+									{{ link_to_route('conversation.create', 'Send Message', array($contact->id), array('class' => 'btn btn-primary')) }}
+								</td>
 								<td></td>
 							</tr>
 						@endforeach

@@ -1,15 +1,12 @@
 @extends('layouts.default')
 
-@section('scripts')
-	{{ HTML::script('js/modal.js'); }}
-	{{ HTML::script('js/manageuser.js'); }}
-	{{ HTML::script('js/multifile.js'); }}
-@stop
-
-@section('stylesheets')
-	{{ HTML::style('css/jquery.fileupload.css'); }}
-	{{ HTML::style('css/jquery.fileupload-ui.css'); }}
-@stop
+<?php
+	Asset::container('assets')->add('modalJS','js/modal.js');
+	Asset::container('assets')->add('manageuserJS','js/manageuser.js');
+	Asset::container('assets')->add('multifileJS','js/multifile.js');
+	Asset::container('assets')->add('fileuploadCSS','css/jquery.fileupload.css');
+	Asset::container('assets')->add('fileuploadUICSS','css/jquery.fileupload-ui.css');
+?>
 
 @section('content')
 	<div>

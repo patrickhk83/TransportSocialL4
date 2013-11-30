@@ -1,7 +1,5 @@
 @extends('layouts.default')
 @section('content')
-	{{ HTML::script("js/manageuser.js") }}
-
 	@include('_partials.errors')
 	{{ Form::open(array('route' => 'users.register', 'id' => 'customer_form'))}}
 		<input type="hidden" name="csrf_token" value="" />
@@ -32,3 +30,5 @@
 	{{ Form::submit('Register', array('class' => 'btn btn-primary')) }}
 	{{ Form::close() }}
 @stop
+
+<?php Asset::container('assets')->add('manageuser', 'js/manageuser.js'); ?>
