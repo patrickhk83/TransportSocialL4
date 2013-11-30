@@ -1,8 +1,6 @@
-<?
+<?php
 
 class Message extends Eloquent {
-
-	protected $table = 'messages';
 
 	public function conversation() {
 		return $this->belongsTo('Conversation');
@@ -12,5 +10,4 @@ class Message extends Eloquent {
 		return $this->belongsTo('User');
 	}
 
-	
 }
