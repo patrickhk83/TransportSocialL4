@@ -19,7 +19,7 @@ class UsersController extends BaseController {
 	 */
 	public function index()
 	{
-    	return View::make('users.index');
+    return View::make('users.index');
 	}
 
 	public function auth()
@@ -37,8 +37,6 @@ class UsersController extends BaseController {
 			return Redirect::route('user.profile', array('id' => $user->id));
 		}
 		return Redirect::back()->withInput()->withErrors($validation->errors);
-
-
 	}
 
 	public function login() {
@@ -57,7 +55,7 @@ class UsersController extends BaseController {
 	 */
 	public function create()
 	{
-    	$validation = new Services\Validators\Register;
+   	$validation = new Services\Validators\Register;
 
 		if($validation->passes()) {
 			$auth = new Services\Auth;
