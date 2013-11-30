@@ -28,14 +28,13 @@
           </p>
         @endif
 
+        {{ link_to_route('flight.view', 'View', array($flight->id), array('class' => 'btn btn-primary')) }}
         @if(Sentry::check())
-          <div>
-            @if(!$flight->saved)
-              {{ link_to_route('flight.privacy', 'Save', array($flight->id), array('class' => 'btn btn-primary')) }}
-            <?php else: ?>
-              {{ link_to_route('flight.delete', 'Delete', array($flight->id), array('class' => 'btn btn-primary')) }}
-            @endif
-          </div>
+          @if(!$flight->saved)
+            {{ link_to_route('flight.privacy', 'Save', array($flight->id), array('class' => 'btn btn-primary')) }}
+          @else
+            {{ link_to_route('flight.delete', 'Delete', array($flight->id), array('class' => 'btn btn-primary')) }}
+          @endif
         @endif
       </li>
     @endforeach
