@@ -8,9 +8,7 @@
     {{ Asset::container('assets')->styles() }}
     @yield('stylesheets')
     <meta charset="UTF-8" />
-    <title>
-      Tutorial
-    </title>
+    <title>Transport Social</title>
   </head>
   <body>
     <div class="container">
