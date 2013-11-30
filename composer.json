@@ -5,14 +5,15 @@
 	"license": "MIT",
 	"require": {
 		"laravel/framework": "4.0.*",
-		"way/generators": "dev-master",
 		"guzzle/guzzle": "dev-rfc3986",
 		"teepluss/asset": "dev-master",
-		"barryvdh/laravel-ide-helper": "1.*",
-		"cartalyst/sentry": "2.0.*"
+		"cartalyst/sentry": "2.0.*",
+		"jones/web-artisan": "dev-master"
 	},
 	"require-dev": {
-    "phpunit/phpunit": "3.7.*"
+		"way/generators": "dev-master",
+    "phpunit/phpunit": "3.7.*",
+    "barryvdh/laravel-ide-helper": "1.*"
   },
 	"autoload": {
 		"classmap": [

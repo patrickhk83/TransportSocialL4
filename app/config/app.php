@@ -117,6 +117,7 @@ return array(
 		'Illuminate\Workbench\WorkbenchServiceProvider',
 		'Cartalyst\Sentry\SentryServiceProvider',
 		'Repositories\StorageServiceProvider',
+		'Jones\WebArtisan\WebArtisanServiceProvider',
 	),
 
 	/*
