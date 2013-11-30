@@ -38,6 +38,11 @@ class EloquentUserRepository implements UserRepositoryInterface {
     $photo->type = $photo::PROFILE;
     $photo->save();
     $user = $this->find($userId);
+    $oldPhoto = $user->profilePicture()->first();
+    if($oldPhoto != null) {
+      $oldPhoto->type = $oldPhoto::PHOTO;
+      $oldPhoto->save();
+    }
     $user->profilePicture()->save($photo);
 
   }
