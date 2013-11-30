@@ -13,9 +13,13 @@ class EloquentMessageRepository implements MessageRepositoryInterface {
 		return Message::find($id);
 	}
 
-	public function create($fields)
+	public function create($fields, $conversation, $user)
 	{
 		$msg = new Message;
-		
+		$msg->message = $fields['message'];
+		$msg->conversation()->associate($conversation);
+		$msg->user()->associate($user);
+		$msg->save();
+		return $msg;
 	}
 }
