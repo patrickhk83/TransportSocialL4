@@ -4,6 +4,9 @@ Route::any('search/flights/by-airport', array('as' => 'flights.by_airport', 'use
 Route::any('search/flights/by-route', array('as' => 'flights.by_route', 'uses' => 'FlightsController@by_route'));
 Route::any('search/flights/by-flight-num', array('as' => 'flights.by_flight_num', 'uses' => 'FlightsController@by_flight_num'));
 
+Route::any('flight/{id}/view', array('as' => 'flight.view', 'uses' => 'FlightsController@view'))
+			 ->where(array('id' => '[0-9]+'));
+
 Route::group(array('before' => 'auth'), function()
 {
 	Route::any('flight/{id}/privacy', array('as' => 'flight.privacy', 'uses' => 'FlightsController@privacy'))
