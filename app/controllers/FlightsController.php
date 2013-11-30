@@ -45,7 +45,7 @@ class FlightsController extends BaseController {
 
 	public function get_flight_results($validation, $function_name) {
 		if($validation->passes()) {
-			$flightStatAPI = new Services\Flightstat\FlightStatus;
+			$flightStatAPI = new Services\Flightstat\FlightStatus($this->carriers, $this->airports);
 			$flights = $flightStatAPI->{$function_name}(Input::all())->flightStatuses;
 			$flights = $this->add_variables($flights);
 			if(Sentry::check()) {
@@ -106,7 +106,7 @@ class FlightsController extends BaseController {
 	public function save($id) {
 		$flight = $this->flights->find($id);
 		if(is_null($flight)) {
-			$flightStatAPI = new Services\Flightstat\FlightStatus;
+			$flightStatAPI = new Services\Flightstat\FlightStatus($this->carriers, $this->airports);
 			$result = $flightStatAPI->by_flight_id($id)->flightStatus;
 			$flightData = array(
 				'id' => $result->flightId,
@@ -123,6 +123,19 @@ class FlightsController extends BaseController {
 		}
 		$this->flights->addPassenger($flight->id, Sentry::getUser()->id, Input::get('privacy'));
 		return Redirect::route('user.flights', array(Sentry::getUser()->id));
+	}
+
+	public function view($id) {
+		$flightStatAPI = new Services\Flightstat\FlightStatus($this->carriers, $this->airports);
+		$flights = array($flightStatAPI->by_flight_id($id)->flightStatus);
+		$flight = $this->getPassengers($flights);
+		$flight = $this->saved($flights, true);
+		$flight = $this->add_variables($flights);
+		$data['flight'] = head($flights);
+		if(!count($data['flight']) > 0) {
+			return Redirect::back()->withErrors(array('Flight was not found'));
+		}
+		return View::make('flights.view', $data);
 	}
 
 	public function delete($id) {
