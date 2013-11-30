@@ -135,6 +135,7 @@ class UsersController extends BaseController {
 			$photo = $this->photos->create(array('path' => $image->path));
 			$user = $this->users->saveProfilePic($photo, $user->id);
 		}
+		return Redirect::back();
 
 	}
 
