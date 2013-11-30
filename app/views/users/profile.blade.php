@@ -1,12 +1,17 @@
 @extends('layouts.default')
 
-@section('content')
-	{{ HTML::style('css/jquery.fileupload.css'); }}
-	{{ HTML::style('css/jquery.fileupload-ui.css'); }}
-
+@section('scripts')
 	{{ HTML::script('js/modal.js'); }}
 	{{ HTML::script('js/manageuser.js'); }}
 	{{ HTML::script('js/multifile.js'); }}
+@stop
+
+@section('stylesheets')
+	{{ HTML::style('css/jquery.fileupload.css'); }}
+	{{ HTML::style('css/jquery.fileupload-ui.css'); }}
+@stop
+
+@section('content')
 	<div>
 		<h1>{{$user->first_name." ".$user->last_name;}}</h1>
 		{{ link_to_route('user.edit_profile', 'Edit Profile', null, array('class' => 'btn btn-primary')) }}
