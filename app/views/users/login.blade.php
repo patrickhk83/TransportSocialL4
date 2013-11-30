@@ -11,5 +11,7 @@
 		{{ Form::password('passwords', array('class' => 'form-control')) }}
 	</div>
 	{{ Form::submit('Login', array('class' => 'btn btn-primary')) }}
+	{{ link_to_route('users.register', 'Register', null, array('class' => 'btn btn-primary')) }}
+
 	{{ Form::close() }}
 @stop
