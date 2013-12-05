@@ -71,4 +71,13 @@ require $framework.'/Illuminate/Foundation/start.php';
 |
 */
 
+HTML::macro('clever_link', function($route, $text, $params = array(), $attributes = array()) {
+    $class = '';
+    $routeUrl = route($route, $params);
+    $currnetUrl = Route::currentRouteName();
+    $class = $route == $currnetUrl ? ' class="active"' : '';
+
+    return '<li' . $class . '>' . link_to_route($route, $text, $params, $attributes) . '</li>';
+});
+
 return $app;
