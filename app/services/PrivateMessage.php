@@ -3,43 +3,32 @@
 class PrivateMessage {
 
 	public $errors = array();
+	protected $users;
 
-	public function __construct() {
-
+	public function __construct($users) {
+		$this->users = $users;
 	}
 
-	public function suggest_user($field)
+	public function suggest_user($term)
 	{
-		$users = \Sentry::findAllUsers();
-
-		$username = strtolower($field);
+		$users = $this->users->suggestFriends($term, \Sentry::getUser());
 		$suggested_users = array();
 		foreach($users as $user)
 		{
-			$value = $user['first_name']." ".$user['last_name'];
-			$value = strtolower($value);
-
-			if(preg_match("/$username/", $value))
-			{
-				$suggested_users[] = $user['first_name']." ".$user['last_name'];
-			}
+				$suggested_users[] = $user->name;
 		}
-
 		return json_encode($suggested_users);
 	}
 
 	public function getContactData($fields)
 	{
-		$user_name = $fields['user_name'];
+		$fullname = $fields['user_name'];
 
 		$contact_name = $fields['contact_name'];
 		$contact_status = $fields['contact_status'];
 
-		$full_name = explode(' ', $user_name);
-		$first_name = $full_name[0];
-
 		$user = \Sentry::getUser();
-		$contact = \User::where('first_name', '=', $first_name)->first();
+		$contact = $this->users->getByName($fullname);
 
 		if(is_null($contact)) {
 			$this->errors[] = 'User not found';
