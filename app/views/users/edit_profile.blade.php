@@ -19,7 +19,7 @@
           	{{ Form::label('country' , trans('user_auth.create_user_user_location')); }}
               {{Form::select('country', $countries , $user->country , array('class' => 'form-control')) }}
           </div>
-		<div class="input-group date"  data-date-format="d-m-yyyy">
+    <div class="form-group">
 			{{ Form::label('birthday' , trans('user_auth.create_user_birthday')); }}
 			<div class="input-group date" data-date-format="d-m-yyyy">
 				{{ Form::text('birthday', $user->birthday , array('class' => 'form-control')) }}
@@ -52,5 +52,6 @@
 		</div>
 		{{ Form::submit('Submit', array('class' => 'btn btn-primary')) }}
 	{{ Form::close() }}
-	
 @stop
+
+@include('_partials.assets.datepicker')
