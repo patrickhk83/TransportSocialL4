@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 return array(
 	'message_inbox'					=>	'Inbox',
@@ -23,4 +23,7 @@ return array(
 	'message_contact_status'		=>	'Status',
 	'message_enter_user_name'		=>	'Enter Name',
 	'message_enter_contact_name'	=>	'Enter Contact Name',
+	'message_pending_contacts' => 'Pending Contacts',
+	'message_approve_contact' => 'Approve',
+	'message_decline_contact' => 'Decline'
 );
