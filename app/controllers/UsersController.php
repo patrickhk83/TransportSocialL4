@@ -2,15 +2,18 @@
 
 use Repositories\User\UserRepositoryInterface as User;
 use Repositories\Photo\PhotoRepositoryInterface as Photo;
+use Repositories\Country\CountryRepositoryInterface as Country;
 
 class UsersController extends BaseController {
 
 	protected $users;
 	protected $photos;
+	protected $countries;
 
-	public function __construct(User $users, Photo $photos) {
+	public function __construct(User $users, Photo $photos, Country $countries) {
 		$this->users = $users;
 		$this->photos = $photos;
+		$this->countries = $countries;
 	}
 	/**
 	 * Display a listing of the resource.
@@ -93,13 +96,12 @@ class UsersController extends BaseController {
 
 	public function profile($id) {
 		$auth = new Services\Auth;
-
 		$data['user'] = $auth->getUserInfo();
-		$data['photos'] = $this->users->getPhotos($data['user']->id);
-		$picture = $this->users->getProfilePic($data['user']->id);
+		$data['photos'] = $this->users->getPhotos($data['user']);
+		$picture = $this->users->getProfilePic($data['user']);
 		$data['profile_pic'] = (count($picture) > 0 ? $picture->path : 'images/default-profile-pic.png');
 		if(isset($data['user']->country)) {
-			$data['country'] = $auth->getCountries($data['user']->country);
+			$data['country'] = $this->countries->findByCode($data['user']->country);
 		}
 		return View::make('users.profile')->with($data);
 	}
@@ -108,7 +110,7 @@ class UsersController extends BaseController {
 	{
 		$auth = new Services\Auth;
 		$data['user'] = $auth->getUserInfo();
-		$data['countries'] = $auth->getCountries();
+		$data['countries'] = $this->countries->listAll();
 		return View::make('users.edit_profile')->with($data);
 	}
 
@@ -128,12 +130,12 @@ class UsersController extends BaseController {
 			$auth = new Services\Auth;
 			$image = new Services\Image;
 			$user = $auth->getUserInfo();
-			$image->upload(Input::file('profile_pic') , $user->id , 'profile');
+			$image->upload(Input::file('profile_pic'), 'profile');
 			if(count($image->errors) > 0) {
 				Redirect::back()->withErrors($image->errors);
 			}
 			$photo = $this->photos->create(array('path' => $image->path));
-			$user = $this->users->saveProfilePic($photo, $user->id);
+			$user = $this->users->saveProfilePic($photo, $user);
 		}
 		return Redirect::back();
 
@@ -141,7 +143,22 @@ class UsersController extends BaseController {
 
 	public function add_photo()
 	{
-
+		$files = Input::file('files');
+		if($files) {
+			$auth = new Services\Auth;
+			$image = new Services\Image;
+			$user = $auth->getUserInfo();
+			$photos = array();
+			foreach($files as $file) {
+				$image->upload($file, 'photo');
+				if(count($image->errors) > 0) {
+					Redirect::back()->withErrors($image->errors);
+				}
+				$photos[] = $this->photos->create(array('path' => $image->path));
+			}
+			$this->users->savePhotos($photos, $user);
+		}
+		return Redirect::back();
 	}
 
 }
