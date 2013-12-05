@@ -50,7 +50,7 @@
                   <span class="fileinput-button">
                     <i class="glyphicon glyphicon-plus"></i>
                     <span>Browse...</span>
-                    <input type="file" name="file[]" id="multifile_input">
+                    <input class="input-file" name="files[]" id="multifile_input" type="file" multiple="multiple">
                   </span>
                 </span>
               </div>
