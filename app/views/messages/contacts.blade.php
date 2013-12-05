@@ -15,23 +15,7 @@
 @section('content')
 
 	<div class="row">
-		<div class="col-md-3">
-			<ul class="nav nav-pills nav-stacked">
-				<li>
-					{{ link_to_route('messages.inbox', trans('messages.message_inbox')) }}
-				</li>
-				<li>
-					{{ link_to_route('messages.inbox', trans('messages.message_write_message')) }}
-				</li>
-				<li>
-					{{ link_to_route('messages.inbox', trans('messages.message_sending_lists')) }}
-				</li>
-				<li class="active">
-					{{ link_to_route('messages.contacts', trans('messages.message_contacts')) }}
-				</li>
-
-			</ul>
-		</div>
+		@include('_partials.messages.sidebar')
 		<div class="col-md-9" role="main">
 			@include('_partials.errors')
 			<div class="panel panel-default">
@@ -53,36 +37,48 @@
   	        {{ Form::submit(trans('messages.message_add_contact') , array('class' => 'btn btn-primary')); }}
 					{{ Form::close();}}
 				</div>
-				<div class="panel-heading">{{ trans('messages.message_list_of_contact'); }}</div>
-				<table class="table table-striped table-hover">
-					<thead>
-						<tr>
-							<th>
-								{{ Form::checkbox('checkAllButon' , '1'); }}
-							</th>
-							<th>{{ trans('messages.message_table_header_contact_name'); }}</th>
-							<th>{{ trans('messages.message_table_header_quick_message'); }}</th>
-
-							<th>{{ trans('messages.message_table_header_delete'); }}</th>
-						</tr>
-					</thead>
-					<tbody>
-						@foreach($contacts as $contact)
+				@if(count($contacts) > 0)
+					<div class="panel-heading">{{ trans('messages.message_list_of_contact'); }}</div>
+					<table class="table table-striped table-hover">
+						<thead>
 							<tr>
-								<td>
-									{{ Form::checkbox('check'.$contact->id , $contact->id); }}
-								</td>
-								<td>
-									{{ $contact->contact_name; }}
-								</td>
-								<td>
-									{{ link_to_route('conversation.create', 'Send Message', array($contact->id), array('class' => 'btn btn-primary')) }}
-								</td>
-								<td></td>
+								<th>{{ trans('messages.message_table_header_contact_name'); }}</th>
+								<th>{{ trans('messages.message_table_header_quick_message'); }}</th>
+								<th>{{ trans('messages.message_table_header_delete'); }}</th>
 							</tr>
-						@endforeach
-					</tbody>
-				</table>
+						</thead>
+						<tbody>
+							@foreach($contacts as $contact)
+								<tr>
+									<td>{{ $contact->contact_name; }}</td>
+									<td>{{ link_to_route('conversation.create', 'Send Message', array($contact->id), array('class' => 'btn btn-primary')) }}</td>
+									<td>{{ link_to_route('user.delete_contact', 'Remove Contact', array($contact->id), array('class' => 'btn btn-primary')) }}</td>
+								</tr>
+							@endforeach
+						</tbody>
+					</table>
+				@endif
+				@if(count($pendingContacts) > 0)
+					<div class="panel-heading">{{ trans('messages.message_pending_contacts'); }}</div>
+					<table class="table table-striped table-hover">
+						<thead>
+							<tr>
+								<th>{{ trans('messages.message_table_header_contact_name'); }}</th>
+								<th>{{ trans('messages.message_approve_contact'); }}</th>
+								<th>{{ trans('messages.message_decline_contact'); }}</th>
+							</tr>
+						</thead>
+						<tbody>
+							@foreach($pendingContacts as $contact)
+								<tr>
+									<td>{{ $contact->contact_name }}</td>
+									<td>{{ link_to_route('user.approve_contact', 'Approve', array($contact->id), array('class' => 'btn btn-primary')) }}</td>
+									<td>{{ link_to_route('user.delete_contact', 'Decline', array($contact->id), array('class' => 'btn btn-primary')) }}</td>
+								</tr>
+							@endforeach
+						</tbody>
+					</table>
+				@endif
 			</div>
 		</div>
 	</div>
