@@ -1,43 +1,43 @@
 <?php namespace Repositories\User;
 
+use Sentry;
 use User;
+use DB;
 
 class EloquentUserRepository implements UserRepositoryInterface {
 
   public function all()
   {
-    return User::all();
+    return Sentry::all();
   }
 
   public function find($id)
   {
-    return User::find($id);
+    return Sentry::find($id);
   }
 
   public function flights($id)
   {
-  	return User::find($id)->flights()->get();
+  	return Sentry::find($id)->flights()->get();
   }
 
-  public function hasFlight($flightId, $userId)
+  public function hasFlight($flightId, $user)
   {
-  	return User::find($userId)->flights()->where('flight_id', '=', $flightId)->first();
+  	return $user->flights()->where('flight_id', '=', $flightId)->first();
   }
 
-  public function getPhotos($userId)
+  public function getPhotos($user)
   {
-    return User::find($userId)->photos()->get();
+    return $user->photos()->get();
   }
 
-  public function getProfilePic($userId) {
-    $user = User::find($userId);
+  public function getProfilePic($user) {
     return $user->profilePicture()->first();
   }
 
-  public function saveProfilePic($photo, $userId) {
+  public function saveProfilePic($photo, $user) {
     $photo->type = $photo::PROFILE;
     $photo->save();
-    $user = $this->find($userId);
     $oldPhoto = $user->profilePicture()->first();
     if($oldPhoto != null) {
       $oldPhoto->type = $oldPhoto::PHOTO;
@@ -47,8 +47,16 @@ class EloquentUserRepository implements UserRepositoryInterface {
 
   }
 
+  public function savePhotos($photos, $user) {
+    foreach($photos as $photo) {
+      $photo->type = $photo::PHOTO;
+      $photo->save();
+      $user->photos()->save($photo);
+    }
+  }
+
   public function add_contact($fields) {
-    $user = User::find($fields['user_id']);
+    $user = Sentry::find($fields['user_id']);
     $user->contacts()->attach($fields['contact_id'],
       array(
         'contact_name' => $fields['contact_name'],
@@ -57,12 +65,37 @@ class EloquentUserRepository implements UserRepositoryInterface {
     );
   }
 
-  public function get_contacts($userId) {
-    $user = User::find($userId);
-    return $user->contacts()->select('user_id', 'contact_id', 'contact_name', 'status')->get();
+  public function get_contacts($user) {
+    return $user->contacts()->where('status', '=', '1')->select('user_id', 'contact_id', 'contact_name', 'status')->get();
   }
 
-  public function get_conversations($userId) {
-    return $this->find($userId)->conversations()->get();
+  public function get_conversations($user) {
+    return $user->conversations()->get();
+  }
+
+  public function deleteFlight($flightId, $user) {
+    $user->flights()->detach($flightId);
+  }
+
+  public function suggestFriends($term, $user) {
+    $users = $user->contacts()->whereNotIn('status', array(1, 2))->get();
+    $userIds = array();
+    $userIds[] = $user->id;
+    foreach($users as $user) {
+      $userIds[] = $user->id;
+    }
+    return User::where(DB::raw('CONCAT(first_name, " ", last_name)'), 'LIKE', "%$term%")->whereNotIn('id', $userIds)->get();
+  }
+
+  public function getByName($name) {
+    return User::where(DB::raw('CONCAT(first_name, " ", last_name)'), '=', $name)->first();
+  }
+
+  public function delete_contact($user, $contactId) {
+    $user->contacts()->detach($contactId);
+  }
+
+  public function get_pending_contacts($user) {
+    return $user->contacts()->where('status', '=', '2')->select('user_id', 'contact_id', 'contact_name', 'status')->get();
   }
 }
