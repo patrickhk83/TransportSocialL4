@@ -34,6 +34,10 @@ class StorageServiceProvider extends ServiceProvider {
       'Repositories\Conversation\ConversationRepositoryInterface',
       'Repositories\Conversation\EloquentConversationRepository'
     );
+    $this->app->bind(
+      'Repositories\Country\CountryRepositoryInterface',
+      'Repositories\Country\EloquentCountryRepository'
+    );
   }
 
 }
