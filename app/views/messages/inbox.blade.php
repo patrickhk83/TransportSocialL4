@@ -2,46 +2,22 @@
 
 @section('content')
 	<div class="row">
-		<div class="col-md-3">
-			<ul class="nav nav-pills nav-stacked">
-				<li class="active">
-					{{ link_to_route('messages.inbox', trans('messages.message_inbox')) }}
-				</li>	
-				<li>
-					{{ link_to_route('messages.inbox', trans('messages.message_write_message')) }}
-				</li>	
-				<li>
-					{{ link_to_route('messages.inbox', trans('messages.message_sending_lists')) }}
-				</li>	
-				<li>
-					{{ link_to_route('messages.contacts', trans('messages.message_contacts')) }}
-				</li>	
-
-			</ul>	
-		</div>
+		@include('_partials.messages.sidebar')
 		<div class="col-md-9" role="main">
-			{{ Form::open(array('route' => 'messages.inbox' , 'id' => 'inbox_form')); }}
-				<fieldset  id="inbox_item_info">
-					{{ form::hidden('box' , '0'); }}
-					<div class="row">
-						<table class="table tavle-striped">
-							<thead>
-								<tr>
-									<th>{{ trans('messages.message_table_header_messages'); }}</th>
-									<th>{{ trans('messages.message_table_header_sender'); }}</th>
-									<th>{{ trans('messages.message_table_header_last_post'); }}</th>
-									<th>
-										<label style="display: inline; white-space: nowrap;">
-											{{ trans('messages.message_table_header_select'); }}
-											 <input type="checkbox" id="checkAllButon" value="1" onclick="checkAll('selected_messages[]','checkAllButon');" />
-										</label>
-									</th>
-								</tr>
-							</thead>
-						</table>	
-					</div>	
-				</fieldset>	
-			{{ Form::close(); }}
-		</div>	
-	</div>	
+			<ul class="list-group">
+			@foreach($user->conversations as $conversation)
+				<a class="list-group-item" href="{{ route('conversation.view', array($conversation->id))}}">
+					<p>{{ $conversation->name }}</p>
+					@foreach($conversation->users as $user)
+						@if($user->profilePicture['path'] != '')
+							<img src="{{ $user->profilePicture['path'] }}" width="20" height="20" />
+						@else
+							<img src="/images/default-profile-pic.png" width="20" height="20" />
+						@endif
+					@endforeach
+				</a>
+			@endforeach
+			</ul>
+		</div>
+	</div>
 @stop
