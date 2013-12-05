@@ -70,7 +70,7 @@ class FlightsController extends BaseController {
 	public function saved($flights, $databaseCall) {
 		foreach($flights as $flight) {
 			if(!$databaseCall) {
-				$savedFlight = $this->users->hasFlight($flight->flightId, Sentry::getUser()->id);
+				$savedFlight = $this->users->hasFlight($flight->flightId, Sentry::getUser());
 				$flight->saved = (!is_null($savedFlight) ? true : false);
 			}
 			else {
@@ -80,11 +80,11 @@ class FlightsController extends BaseController {
 		return $flights;
 	}
 
-	public function getPassengers($flights) {
+	public function getPassengers($flights, $id = 'flightId') {
 		foreach($flights as $flight) {
 			$flight->passengers = array();
-			if($this->flights->find($flight->flightId) != null) {
-				$flight->passengers = $this->flights->getPassengers($flight->flightId);
+			if($this->flights->find($flight->{$id}) != null) {
+				$flight->passengers = $this->flights->getPassengers($flight->{$id});
 			}
 		}
 		return $flights;
@@ -97,8 +97,9 @@ class FlightsController extends BaseController {
 
 	public function saved_flights($id) {
 		$flights = $this->users->flights($id);
-		$this->saved($flights, true);
-		$this->getPassengers($flights);
+		$flights = $this->saved($flights, true);
+		$flights = $this->getPassengers($flights, 'id');
+
 		$data['flights'] = $flights;
 		return View::make('flights.index', $data);
 	}
@@ -127,10 +128,17 @@ class FlightsController extends BaseController {
 
 	public function view($id) {
 		$flightStatAPI = new Services\Flightstat\FlightStatus($this->carriers, $this->airports);
-		$flights = array($flightStatAPI->by_flight_id($id)->flightStatus);
+		$flight = $flightStatAPI->by_flight_id($id);
+		$flights = array();
+		if(property_exists($flight, 'flightStatus')) {
+			$flights[] = $flight->flightStatus;
+			$flight = $this->add_variables($flights);
+		}
+		else {
+			$flights[] = $this->flights->find($id);
+		}
 		$flight = $this->getPassengers($flights);
 		$flight = $this->saved($flights, true);
-		$flight = $this->add_variables($flights);
 		$data['flight'] = head($flights);
 		if(!count($data['flight']) > 0) {
 			return Redirect::back()->withErrors(array('Flight was not found'));
@@ -139,16 +147,16 @@ class FlightsController extends BaseController {
 	}
 
 	public function delete($id) {
-		$user = User::find(Sentry::getUser()->id);
-		$flight = $user->flights()->find($id);
+		$user = Sentry::getUser();
+		$flight = $this->users->hasFlight($id, $user);
 		if(!is_null($flight)) {
-			$user->flights()->detach($flight->id);
+			$this->users->deleteFlight($id, $user);
 			Session::flash('message', 'You have successfully deleted the flight');
 		}
 		else {
 			Session::flash('message', 'The flight you are trying to delete was either not saved or deleted already');
 		}
 
-		return Redirect::route('user.flights');
+		return Redirect::route('user.flights', array($user->id));
 	}
 }
