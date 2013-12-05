@@ -98,4 +98,10 @@ class EloquentUserRepository implements UserRepositoryInterface {
   public function get_pending_contacts($user) {
     return $user->contacts()->where('status', '=', '2')->select('user_id', 'contact_id', 'contact_name', 'status')->get();
   }
+
+  public function approve_contact($user, $contactId) {
+    $contact = $user->contacts()->where('contact_id', $contactId)->first();
+    $contact->pivot->status = 1;
+    $contact->pivot->save();
+  }
 }
