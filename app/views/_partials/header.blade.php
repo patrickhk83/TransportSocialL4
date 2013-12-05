@@ -13,16 +13,16 @@
 
   <div class="collapse navbar-collapse navbar-ex1-collapse">
     <ul class="nav navbar-nav">
-      <li>{{ link_to_route('flights.by_airport', 'By Airport') }}</li>
-      <li>{{ link_to_route('flights.by_route', 'By Route') }}</li>
-      <li>{{ link_to_route('flights.by_flight_num', 'By Flight') }}</li>
+      {{ HTML::clever_link('flights.by_airport', 'By Airport') }}
+      {{ HTML::clever_link('flights.by_route', 'By Route') }}
+      {{ HTML::clever_link('flights.by_flight_num', 'By Flight') }}
       @if(Sentry::check())
-        <li>{{ link_to_route('user.flights', 'Save Flights', array(Sentry::getUser()->id)) }}</li>
-        <li>{{ link_to_route('messages.inbox', 'Messages') }}</li>
-        <li>{{ link_to_route('user.profile', 'My Profile', array(Sentry::getUser()->id)) }}</li>
-        <li>{{ link_to_route('users.logout', 'Logout') }}</li>
+        {{ HTML::clever_link('user.flights', 'Save Flights', array(Sentry::getUser()->id)) }}
+        {{ HTML::clever_link('messages.inbox', 'Messages') }}
+        {{ HTML::clever_link('user.profile', 'My Profile', array(Sentry::getUser()->id)) }}
+        {{ HTML::clever_link('users.logout', 'Logout') }}
       @else
-        <li>{{ link_to_route('users.login', 'Login') }}</li>
+        {{ HTML::clever_link('users.login', 'Login') }}
       @endif
     </ul>
   </div><!-- /.navbar-collapse -->
