@@ -11,10 +11,10 @@ class Image {
 
 	}
 
-	public function upload($file , $user_id , $directory)
+	public function upload($file, $directory)
 	{
 		$file_name = $file->getClientOriginalName();
-		$path = public_path()."\\uploads\\".$directory."\\";
+		$path = public_path()."/uploads/".$directory."/";
 		$url = "/uploads/".$directory."/".$file_name;
 		$real_extension = $file->getClientOriginalExtension();
 		$dest_file = $path.$file_name;
