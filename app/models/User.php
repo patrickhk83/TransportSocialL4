@@ -1,9 +1,8 @@
 <?php
 
-use Illuminate\Auth\UserInterface;
-use Illuminate\Auth\Reminders\RemindableInterface;
+use Cartalyst\Sentry\Users\Eloquent\User as CartalystUser;
 
-class User extends Eloquent implements UserInterface, RemindableInterface {
+class User extends CartalystUser {
 
 	/**
 	 * The database table used by the model.
@@ -12,6 +11,8 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	 */
 	protected $table = 'users';
 
+	protected $appends = array('name');
+
 	/**
 	 * The attributes excluded from the model's JSON form.
 	 *
@@ -19,35 +20,10 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	 */
 	protected $hidden = array('password');
 
-	/**
-	 * Get the unique identifier for the user.
-	 *
-	 * @return mixed
-	 */
-	public function getAuthIdentifier()
-	{
-		return $this->getKey();
-	}
-
-	/**
-	 * Get the password for the user.
-	 *
-	 * @return string
-	 */
-	public function getAuthPassword()
-	{
-		return $this->password;
-	}
-
-	/**
-	 * Get the e-mail address where password reminders are sent.
-	 *
-	 * @return string
-	 */
-	public function getReminderEmail()
-	{
-		return $this->email;
-	}
+	public function getNameAttribute()
+  {
+    return $this->attributes['first_name'] . ' ' . $this->attributes['last_name'];
+  }
 
 	public function flights()
 	{
@@ -64,6 +40,10 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 
   public function contacts() {
   	return $this->belongsToMany('User', 'contacts', 'user_id', 'contact_id')->withPivot('status', 'contact_name');
+  }
+
+  public function pendingContacts() {
+  	return $this->belongsToMany('User', 'contacts', 'user_id', 'contact_id')->withPivot('status', 'contact_name')->where('status', '2');
   }
 
   public function messages() {
