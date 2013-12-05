@@ -19,7 +19,7 @@
   @if(count($flight->passengers) > 0)
     <p>
       @foreach($flight->passengers as $passenger)
-        <img src="/assets/images/default-profile-pic.png" width="20" height="20">
+        <img src="/images/default-profile-pic.png" width="20" height="20">
       @endforeach
     </p>
   @endif
