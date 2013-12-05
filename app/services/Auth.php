@@ -11,47 +11,12 @@ class Auth {
 
 	public function getUserInfo()
 	{
-		try
-		{
-			$user = \Sentry::getUser();
-		}
-		catch (\Cartalyst\Sentry\Users\UserNotFoundException $e)
-		{
-			$this->errors[] = "User not found";
-		}
-		return $user;
-	}
-
-	public function getUserPhotos($user_id , $photo_id = null)
-	{
-		$photos = \User::find($user_id)->photos();
-		if(!is_null($photo_id)) {
-			return $photos = $photos->where('id', '=', $photo_id)->first();
-		}
-		return $photos->get();
-
-	}
-
-	public function getCountries($country_code = null)
-	{
-		if(is_null($country_code))
-		{
-			$countries = \Country::lists('name', 'code');
-			return $countries;
-		}
-		else
-		{
-			$country = \Country::where('code' , '=', $country_code)->first();
-			return $country;
-		}
-
+		return \Sentry::getUser();
 	}
 
 	public function login($fields)
 	{
 		try {
-			$throttleProvider = \Sentry::getThrottleProvider();
-			$throttleProvider->disable();
 			$user = \Sentry::authenticate(
 				array(
 					'email' => $fields['username'] ,
@@ -151,7 +116,7 @@ class Auth {
 	public function send_activation_email($user) {
 		//Send activation code to the user so he can activate the account
 		$data = array(
-			'name'		 => $user->first_name.$user->last_name,
+			'name'		 => $user->name,
 			'email'      => $user->email,
 			'activation' => $user->getActivationCode(),
 			'id'		 => $user->id,
