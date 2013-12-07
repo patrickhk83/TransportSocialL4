@@ -11,22 +11,21 @@ $("document").ready(function(){
             }
             var reader = new FileReader();
 
+            $('#multifile_list').html('');
             reader.onload = (function(theFile)
             {
                 return function(e) {
-                    var new_li = document.createElement('li');
-                    var new_img = document.createElement('img');
-                    new_img.src = e.target.result;
-                    new_img.classList.add('thumb');
-                    var new_name = document.createElement('span');
-                    new_name.innerHTML = escape(theFile.name);
+                    var img = document.createElement('img');
+                    var container = document.createElement('div');
+                    img.src = e.target.result;
+                    img.classList.add('thumb');
+                    img.classList.add('img-thumbnail');
+                    container.classList.add('img-container');
+                    container.classList.add('col-md-6');
 
-                    $(new_li).prepend(delete_link);
-                    $(new_li).prepend(new_name);
-                    $(new_li).prepend(new_img);
+                    $(container).append(img);
 
-
-                    $('#multifile_list').append(new_li);
+                    $('#multifile_list').append(container);
                 }
             })(file);
 
