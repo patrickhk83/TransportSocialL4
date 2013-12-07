@@ -1,6 +1,13 @@
-.thumb {
+.files {
+	padding-left:0;
+}
 
-	height:200px;
+.thumb {
+	height: 200px;
+}
+
+[class*="col-md"] {
+	margin-bottom:2%;
 }
 
 .datepicker {
