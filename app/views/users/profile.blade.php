@@ -49,9 +49,11 @@
 
 	@if (isset($photos) && count($photos) > 0)
 	<h1 class="heading">{{ trans('user_auth.my_profile_my_photos'); }}</h1>
-		<div>
+		<div class="row">
 			@foreach ($photos as $photo)
-					{{ HTML::image($photo->path , null , array('class' => 'thumb')) }}
+					<div class="col-md-3">
+						{{ HTML::image($photo->path , null , array('class' => 'thumb img-thumbnail')) }}
+					</div>
 			@endforeach
 		</div>
 	@endif
