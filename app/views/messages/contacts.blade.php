@@ -30,10 +30,6 @@
             	{{ Form::label('contactname' , trans('messages.message_contact_name') , array('class' => 'sr-only')); }}
               {{ Form::text('contact_name' , null , array('class' => 'form-control' , 'id' => 'contact_name' , 'placeholder' => trans('messages.message_enter_contact_name')));}}
   	        </div>
-  	        <div class="form-group">
-              {{ Form::label('contact_status' , trans('messages.message_contact_status') , array('class' => 'sr-only'));}}
-              {{ Form::select('contact_status', array('1' => 'allow' , '2' => 'pending' , '3' => 'decline') , '1' , array('class' => 'form-control' , 'id' => 'contact_status')); }}
-		        </div>
   	        {{ Form::submit(trans('messages.message_add_contact') , array('class' => 'btn btn-primary')); }}
 					{{ Form::close();}}
 				</div>
