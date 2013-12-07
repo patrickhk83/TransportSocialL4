@@ -81,10 +81,15 @@ class FlightsController extends BaseController {
 	}
 
 	public function getPassengers($flights, $id = 'flightId') {
+		$auth = new Services\Auth;
 		foreach($flights as $flight) {
 			$flight->passengers = array();
 			if($this->flights->find($flight->{$id}) != null) {
-				$flight->passengers = $this->flights->getPassengers($flight->{$id});
+				foreach($this->flights->getPassengers($flight->{$id}) as $passenger) {
+					if($this->showPassenger($auth->GetUserInfo(), $passenger)) {
+						$flight->passengers[] = $passenger;
+					}
+				}
 			}
 		}
 		return $flights;
@@ -103,6 +108,23 @@ class FlightsController extends BaseController {
 		$data['flights'] = $flights;
 		return View::make('flights.index', $data);
 	}
+
+	private function showPassenger($user, $passenger) {
+    if($passenger->privacy == ONLY_YOU && $user->id == $passenger->id) {
+      return true;
+    }
+    else if(isset($user->id)) {
+    	if($passenger->privacy == OTHER_USERS && isset($user->id)) {
+	      return true;
+	    }
+	    else if($passenger->privacy == ONLY_FRIENDS && $this->users->hasFriend($user, $passenger->id)) {
+	    	return true;
+	    }
+    }
+    else {
+      return false;
+    }
+  }
 
 	public function save($id) {
 		$flight = $this->flights->find($id);
