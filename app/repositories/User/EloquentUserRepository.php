@@ -3,6 +3,7 @@
 use Sentry;
 use User;
 use DB;
+use Conversation;
 
 class EloquentUserRepository implements UserRepositoryInterface {
 
@@ -57,7 +58,7 @@ class EloquentUserRepository implements UserRepositoryInterface {
 
   public function add_contact($fields) {
     $user = Sentry::find($fields['user_id']);
-    $user->contacts()->attach($fields['contact_id'],
+    $this->find($fields['contact_id'])->contacts()->attach($user->id,
       array(
         'contact_name' => $fields['contact_name'],
         'status' => $fields['contact_status']
@@ -93,6 +94,15 @@ class EloquentUserRepository implements UserRepositoryInterface {
 
   public function delete_contact($user, $contactId) {
     $user->contacts()->detach($contactId);
+    $this->find($contactId)->contacts()->detach($user->id);
+    $ids = array($user->id, (int)$contactId);
+    $myConversations = $user->conversations()->get();
+    foreach($myConversations as $conversation) {
+      $userIds = $conversation->users()->lists('user_id');
+      if($ids === $userIds) {
+        Conversation::destroy($conversation->id);
+      }
+    }
   }
 
   public function get_pending_contacts($user) {
@@ -102,6 +112,22 @@ class EloquentUserRepository implements UserRepositoryInterface {
   public function approve_contact($user, $contactId) {
     $contact = $user->contacts()->where('contact_id', $contactId)->first();
     $contact->pivot->status = 1;
+
+    $this->find($contactId)->contacts()->attach($user->id,
+      array(
+        'status' => $contact->pivot->status,
+        'contact_name' => $contact->pivot->contact_name
+      )
+    );
+
     $contact->pivot->save();
+  }
+
+  public function hasFriend($user, $userIds) {
+    if(!is_array($userIds))
+      $userIds = array($userIds);
+
+    $contacts = $user->contacts()->where('status', '=', '1')->whereIn('contact_id', $userIds)->get();
+    return count($userIds) === count($contacts);
   }
 }

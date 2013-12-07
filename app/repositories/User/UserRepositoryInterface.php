@@ -34,4 +34,8 @@ interface UserRepositoryInterface {
 
   public function get_pending_contacts($user);
 
+  public function approve_contact($user, $contactId);
+
+  public function hasFriend($user, $userIds);
+
 }
