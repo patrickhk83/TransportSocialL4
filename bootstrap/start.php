@@ -80,4 +80,6 @@ HTML::macro('clever_link', function($route, $text, $params = array(), $attribute
     return '<li' . $class . '>' . link_to_route($route, $text, $params, $attributes) . '</li>';
 });
 
+require $app['path.base'].'/app/config/constants.php';
+
 return $app;
