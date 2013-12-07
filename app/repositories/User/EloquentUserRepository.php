@@ -67,7 +67,7 @@ class EloquentUserRepository implements UserRepositoryInterface {
   }
 
   public function get_contacts($user) {
-    return $user->contacts()->where('status', '=', '1')->select('user_id', 'contact_id', 'contact_name', 'status')->get();
+    return $user->contacts()->where('status', '=', APPROVED)->select('user_id', 'contact_id', 'contact_name', 'status')->get();
   }
 
   public function get_conversations($user) {
@@ -106,7 +106,7 @@ class EloquentUserRepository implements UserRepositoryInterface {
   }
 
   public function get_pending_contacts($user) {
-    return $user->contacts()->where('status', '=', '2')->select('user_id', 'contact_id', 'contact_name', 'status')->get();
+    return $user->contacts()->where('status', '=', PENDING)->select('user_id', 'contact_id', 'contact_name', 'status')->get();
   }
 
   public function approve_contact($user, $contactId) {
@@ -127,7 +127,7 @@ class EloquentUserRepository implements UserRepositoryInterface {
     if(!is_array($userIds))
       $userIds = array($userIds);
 
-    $contacts = $user->contacts()->where('status', '=', '1')->whereIn('contact_id', $userIds)->get();
+    $contacts = $user->contacts()->where('status', '=', APPROVED)->whereIn('contact_id', $userIds)->get();
     return count($userIds) === count($contacts);
   }
 }
