@@ -23,10 +23,7 @@ class PrivateMessage {
 	public function getContactData($fields)
 	{
 		$fullname = $fields['user_name'];
-
 		$contact_name = $fields['contact_name'];
-		$contact_status = $fields['contact_status'];
-
 		$user = \Sentry::getUser();
 		$contact = $this->users->getByName($fullname);
 
@@ -39,9 +36,7 @@ class PrivateMessage {
 			'user_id' 			=>	$user->id,
 			'contact_id'		=>	$contact->id,
 			'contact_name'		=>	$contact_name,
-			'contact_status'	=>	$contact_status,
+			'contact_status'	=>	PENDING,
 		);
-
-
 	}
 }

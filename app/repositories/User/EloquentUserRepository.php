@@ -111,7 +111,7 @@ class EloquentUserRepository implements UserRepositoryInterface {
 
   public function approve_contact($user, $contactId) {
     $contact = $user->contacts()->where('contact_id', $contactId)->first();
-    $contact->pivot->status = 1;
+    $contact->pivot->status = APPROVED;
 
     $this->find($contactId)->contacts()->attach($user->id,
       array(
