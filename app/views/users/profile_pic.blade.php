@@ -15,7 +15,7 @@
                   <span class="fileinput-button">
                     <i class="glyphicon glyphicon-plus"></i>
                     <span>Browse...</span>
-                    <input type="file" class="profile-pic" name="profile_pic" id="profile_pic">
+                    <input type="file" class="input-file" name="profile_pic" id="profile_pic">
                   </span>
                 </span>
               </div>
