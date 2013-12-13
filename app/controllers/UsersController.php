@@ -97,13 +97,17 @@ class UsersController extends BaseController {
 
 	public function profile($id) {
 		$auth = new Services\Auth;
-		$data['user'] = $auth->getUserInfo();
-		$data['photos'] = $this->users->getPhotos($data['user']);
-		$picture = $this->users->getProfilePic($data['user']);
-		$data['profile_pic'] = (count($picture) > 0 ? $picture->path : 'images/default-profile-pic.png');
-		if(isset($data['user']->country)) {
-			$data['country'] = $this->countries->findByCode($data['user']->country);
+		$user = $this->users->find($id);
+		if(!$user) {
+			return Redirect::route('site.home');
 		}
+		$picture = $this->users->getProfilePic($user);
+		$data['photos'] = $this->users->getPhotos($user);
+		$data['profile_pic'] = (count($picture) > 0 ? $picture->path : DEFAULT_PROFILE_IMG);
+		if(isset($user->country)) {
+			$data['country'] = $this->countries->findByCode($user->country);
+		}
+		$data['user'] = $user;
 		return View::make('users.profile')->with($data);
 	}
 
