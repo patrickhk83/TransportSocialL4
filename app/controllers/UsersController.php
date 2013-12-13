@@ -33,10 +33,11 @@ class UsersController extends BaseController {
 
 		if($validation->passes())
 		{
-			$user = $auth->login(Input::all());
+			$auth->login(Input::all());
 			if(count($auth->errors) > 0) {
 				return Redirect::back()->withInput()->withErrors($auth->errors);
 			}
+			$user = $auth->GetUserInfo();
 			return Redirect::route('user.profile', array('id' => $user->id));
 		}
 		return Redirect::back()->withInput()->withErrors($validation->errors);

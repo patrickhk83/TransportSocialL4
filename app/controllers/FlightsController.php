@@ -52,6 +52,7 @@ class FlightsController extends BaseController {
 				$this->saved($flights, false);
 			}
 			$this->getPassengers($flights);
+			$data['no_flights'] = trans('flights.no_flights_found');
 			$data['flights'] = $flights;
 			return View::make('flights.index', $data);
 		}
@@ -60,8 +61,8 @@ class FlightsController extends BaseController {
 
 	public function add_variables($flights) {
 		foreach($flights as $flight) {
-			$flight->departureDate = $flight->departureDate->dateLocal;
-			$flight->arrivalDate = $flight->arrivalDate->dateLocal;
+			$flight->departureTime = $flight->departureDate->dateLocal;
+			$flight->arrivalTime = $flight->arrivalDate->dateLocal;
 			$flight->id = $flight->flightId;
 		}
 		return $flights;
@@ -85,11 +86,7 @@ class FlightsController extends BaseController {
 		foreach($flights as $flight) {
 			$flight->passengers = array();
 			if($this->flights->find($flight->{$id}) != null) {
-				foreach($this->flights->getPassengers($flight->{$id}) as $passenger) {
-					if($this->showPassenger($auth->GetUserInfo(), $passenger)) {
-						$flight->passengers[] = $passenger;
-					}
-				}
+				$flight->passengers = $this->flights->getPassengers($flight->{$id}, $auth->getUserInfo());
 			}
 		}
 		return $flights;
@@ -104,27 +101,10 @@ class FlightsController extends BaseController {
 		$flights = $this->users->flights($id);
 		$flights = $this->saved($flights, true);
 		$flights = $this->getPassengers($flights, 'id');
-
+		$data['no_flights'] = trans('flights.no_saved_flights');
 		$data['flights'] = $flights;
 		return View::make('flights.index', $data);
 	}
-
-	private function showPassenger($user, $passenger) {
-    if($passenger->privacy == ONLY_YOU && $user->id == $passenger->id) {
-      return true;
-    }
-    else if(isset($user->id)) {
-    	if($passenger->privacy == OTHER_USERS && isset($user->id)) {
-	      return true;
-	    }
-	    else if($passenger->privacy == ONLY_FRIENDS && $this->users->hasFriend($user, $passenger->id)) {
-	    	return true;
-	    }
-    }
-    else {
-      return false;
-    }
-  }
 
 	public function save($id) {
 		$flight = $this->flights->find($id);
@@ -163,7 +143,7 @@ class FlightsController extends BaseController {
 		$flight = $this->saved($flights, true);
 		$data['flight'] = head($flights);
 		if(!count($data['flight']) > 0) {
-			return Redirect::back()->withErrors(array('Flight was not found'));
+			return Redirect::back()->withErrors(array(trans('flights.not_found')));
 		}
 		return View::make('flights.view', $data);
 	}
@@ -173,10 +153,10 @@ class FlightsController extends BaseController {
 		$flight = $this->users->hasFlight($id, $user);
 		if(!is_null($flight)) {
 			$this->users->deleteFlight($id, $user);
-			Session::flash('message', 'You have successfully deleted the flight');
+			Session::flash('message', trans('flights.deleted_flight'));
 		}
 		else {
-			Session::flash('message', 'The flight you are trying to delete was either not saved or deleted already');
+			Session::flash('message', trans('flights.cannot_delete'));
 		}
 
 		return Redirect::route('user.flights', array($user->id));
