@@ -19,8 +19,8 @@
 		</div>
 
 		<div class="form-group">
-			{{ Form::label('passwords' , trans('user_auth.create_user_password_label'))}}
-			{{ Form::password('passwords' , array('class' => 'form-control')) }}
+			{{ Form::label('password' , trans('user_auth.create_user_password_label'))}}
+			{{ Form::password('password' , array('class' => 'form-control')) }}
 		</div>
 
 		<div class="form-group">
