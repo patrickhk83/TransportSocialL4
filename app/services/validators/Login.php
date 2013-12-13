@@ -2,7 +2,7 @@
 
 class Login extends Validator {
 	public static $rules = array (
-		'username' => 'required|email',
-		'passwords' => 'required',
+		'email' => 'required|email',
+		'password' => 'required',
 	);
 }

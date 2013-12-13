@@ -5,7 +5,7 @@ class Register extends Validator {
 		'first_name' => 'required',
 		'last_name' => 'required',
 		'email' => 'required|email',
-		'passwords' => 'required',
-		'repeat_password' => 'required|same:passwords'
+		'password' => 'required',
+		'repeat_password' => 'required|same:password'
 	);
 }
