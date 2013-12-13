@@ -13,10 +13,12 @@
 				</ul>
 			@endif
 			{{ Form::open(array('route' => array('message.send', $conversation->id))) }}
-			<div class='form-group'>
-				{{ Form::text('message' , null , array('class' => 'form-control')); }}
+			<div class="input-group">
+				{{ Form::text('message' , null , array('class' => 'form-control', 'placeholder' => 'Enter message...')) }}
+				<span class="input-group-btn">
+        	{{ Form::submit('Send' , array('class' => 'btn btn-primary')) }}
+      </span>
 			</div>
-			{{ Form::submit('Submit' , array('class' => 'btn btn-primary')); }}
 			{{ Form::close() }}
 		</div>
 	</div>
