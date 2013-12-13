@@ -24,11 +24,7 @@
 					{{ Form::open(array('route' => 'messages.add_contact' , 'id' => 'add_contact_form' , 'class' => 'form-inline' , 'role' => 'form')); }}
 						<div class="form-group">
 							{{ Form::label('username' , trans('messages.message_user_name') , array('class' => 'sr-only')); }}
-		    	    {{ Form::text('user_name' , null , array('class' => 'form-control' , 'id' => 'user_name' , 'placeholder' => trans('messages.message_enter_user_name'))); }}
-  	        </div>
-  	        <div class="form-group">
-            	{{ Form::label('contactname' , trans('messages.message_contact_name') , array('class' => 'sr-only')); }}
-              {{ Form::text('contact_name' , null , array('class' => 'form-control' , 'id' => 'contact_name' , 'placeholder' => trans('messages.message_enter_contact_name')));}}
+		    	    {{ Form::text('user_name' , null , array('class' => 'form-control' , 'id' => 'user_name' , 'placeholder' => trans('messages.message_search_friend'))); }}
   	        </div>
   	        {{ Form::submit(trans('messages.message_add_contact') , array('class' => 'btn btn-primary')); }}
 					{{ Form::close();}}
@@ -46,7 +42,7 @@
 						<tbody>
 							@foreach($contacts as $contact)
 								<tr>
-									<td>{{ $contact->contact_name; }}</td>
+									<td>{{ $contact->name; }}</td>
 									<td>{{ link_to_route('conversation.create', 'Send Message', array($contact->id), array('class' => 'btn btn-primary')) }}</td>
 									<td>{{ link_to_route('user.delete_contact', 'Remove Contact', array($contact->id), array('class' => 'btn btn-primary')) }}</td>
 								</tr>
@@ -67,7 +63,7 @@
 						<tbody>
 							@foreach($pendingContacts as $contact)
 								<tr>
-									<td>{{ $contact->contact_name }}</td>
+									<td>{{ $contact->name }}</td>
 									<td>{{ link_to_route('user.approve_contact', 'Approve', array($contact->id), array('class' => 'btn btn-primary')) }}</td>
 									<td>{{ link_to_route('user.delete_contact', 'Decline', array($contact->id), array('class' => 'btn btn-primary')) }}</td>
 								</tr>
