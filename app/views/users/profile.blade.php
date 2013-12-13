@@ -11,11 +11,15 @@
 @section('content')
 	<div>
 		<h1>{{$user->first_name." ".$user->last_name;}}</h1>
-		{{ link_to_route('user.edit_profile', 'Edit Profile', null, array('class' => 'btn btn-primary')) }}
+		@if($isUser)
+			{{ link_to_route('user.edit_profile', 'Edit Profile', null, array('class' => 'btn btn-primary')) }}
+		@endif
 	</div>
 	<div class="photo">
 		{{ HTML::image($profile_pic, null , array('class' => 'thumb')) }}
-		{{ link_to_route('user.edit_profile', 'Edit Profile Pic', null, array('class' => 'btn btn-primary' , 'data-toggle' => 'modal' , 'data-target' => '#profile_pic_form' , 'data-remote' => 'false')) }}
+		@if($isUser)
+			{{ link_to_route('user.edit_profile', 'Edit Profile Pic', null, array('class' => 'btn btn-primary' , 'data-toggle' => 'modal' , 'data-target' => '#profile_pic_form' , 'data-remote' => 'false')) }}
+		@endif
 	</div>
 	@if(!empty($user->company))
 		<div class="occupation">
@@ -57,7 +61,9 @@
 			@endforeach
 		</div>
 	@endif
-	{{ link_to_route('user.add_photo', 'Add My Photo', null, array('class' => 'btn btn-primary' , 'data-toggle' => 'modal' , 'data-target' => '#upload_photo_dialog' , 'data-remote' => 'false')) }}
+	@if($isUser)
+		{{ link_to_route('user.add_photo', 'Add My Photo', null, array('class' => 'btn btn-primary' , 'data-toggle' => 'modal' , 'data-target' => '#upload_photo_dialog' , 'data-remote' => 'false')) }}
+	@endif
 
 @include('users.profile_pic')
 @stop
