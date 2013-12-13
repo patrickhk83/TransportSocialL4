@@ -6,7 +6,7 @@ interface FlightRepositoryInterface {
 
   public function find($id);
 
-  public function getPassengers($id);
+  public function getPassengers($id, $user);
 
   public function addPassenger($flightId, $userId, $privacy);
 

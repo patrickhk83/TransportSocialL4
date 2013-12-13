@@ -14,9 +14,30 @@ class EloquentFlightRepository implements FlightRepositoryInterface {
     return Flight::find($id);
   }
 
-  public function getPassengers($id)
+  public function getPassengers($id, $user)
   {
-  	return Flight::find($id)->passengers()->get();
+    $passengers = $this->find($id)->passengers->filter(function($passenger) use($user)
+    {
+      if($user->id == $passenger->id) {
+        return true;
+      }
+      if($passenger->pivot->privacy == ONLY_YOU && $user->id == $passenger->id) {
+        return true;
+      }
+      else if(isset($user->id)) {
+        if($passenger->pivot->privacy == OTHER_USERS && isset($user->id)) {
+          return true;
+        }
+        else if($passenger->pivot->privacy == ONLY_FRIENDS && $user->hasFriend($passenger->id)) {
+          return true;
+        }
+      }
+      else {
+        return false;
+      }
+    });
+
+    return $passengers;
   }
 
   public function addPassenger($flightId, $userId, $privacy)
