@@ -2,7 +2,6 @@
 
 class Contact extends Validator {
 	public static $rules = array (
-		'user_name' => 'required',
-		'contact_name' => 'required',
+		'user_name' => 'required'
 	);
 }

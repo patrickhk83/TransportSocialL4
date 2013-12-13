@@ -60,14 +60,13 @@ class EloquentUserRepository implements UserRepositoryInterface {
     $user = Sentry::find($fields['user_id']);
     $this->find($fields['contact_id'])->contacts()->attach($user->id,
       array(
-        'contact_name' => $fields['contact_name'],
         'status' => $fields['contact_status']
       )
     );
   }
 
   public function get_contacts($user) {
-    return $user->contacts()->where('status', '=', APPROVED)->select('user_id', 'contact_id', 'contact_name', 'status')->get();
+    return $user->contacts()->where('status', '=', APPROVED)->get();
   }
 
   public function get_conversations($user) {
@@ -106,7 +105,7 @@ class EloquentUserRepository implements UserRepositoryInterface {
   }
 
   public function get_pending_contacts($user) {
-    return $user->contacts()->where('status', '=', PENDING)->select('user_id', 'contact_id', 'contact_name', 'status')->get();
+    return $user->contacts()->where('status', '=', PENDING)->get();
   }
 
   public function approve_contact($user, $contactId) {
@@ -115,8 +114,7 @@ class EloquentUserRepository implements UserRepositoryInterface {
 
     $this->find($contactId)->contacts()->attach($user->id,
       array(
-        'status' => $contact->pivot->status,
-        'contact_name' => $contact->pivot->contact_name
+        'status' => $contact->pivot->status
       )
     );
 
@@ -124,10 +122,6 @@ class EloquentUserRepository implements UserRepositoryInterface {
   }
 
   public function hasFriend($user, $userIds) {
-    if(!is_array($userIds))
-      $userIds = array($userIds);
-
-    $contacts = $user->contacts()->where('status', '=', APPROVED)->whereIn('contact_id', $userIds)->get();
-    return count($userIds) === count($contacts);
+    return $user->hasFriend($userIds);
   }
 }

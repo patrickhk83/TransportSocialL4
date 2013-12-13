@@ -39,11 +39,11 @@ class User extends CartalystUser {
 	}
 
   public function contacts() {
-  	return $this->belongsToMany('User', 'contacts', 'user_id', 'contact_id')->withPivot('status', 'contact_name');
+  	return $this->belongsToMany('User', 'contacts', 'user_id', 'contact_id')->withPivot('status');
   }
 
   public function pendingContacts() {
-  	return $this->belongsToMany('User', 'contacts', 'user_id', 'contact_id')->withPivot('status', 'contact_name')->where('status', '2');
+  	return $this->belongsToMany('User', 'contacts', 'user_id', 'contact_id')->withPivot('status')->where('status', PENDING);
   }
 
   public function messages() {
@@ -52,6 +52,14 @@ class User extends CartalystUser {
 
 	public function conversations() {
 		return $this->belongsToMany('Conversation');
+	}
+
+	public function hasFriend($userIds) {
+		if(!is_array($userIds))
+      $userIds = array($userIds);
+
+    $contacts = $this->contacts()->where('status', '=', APPROVED)->whereIn('contact_id', $userIds)->get();
+    return count($userIds) === count($contacts);
 	}
 
 }
