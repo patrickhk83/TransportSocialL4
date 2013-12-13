@@ -24,6 +24,8 @@ class EloquentAirportRepository implements AirportRepositoryInterface {
   }
 
   public function suggest($term) {
-    return Airport::where('name', 'like', '%'.$term.'%')->get(array('name', 'id'));
+    return Airport::where('name', 'like', '%'.$term.'%')
+                    ->orWhere('airport_code', 'like', '%'.$term.'%')
+                    ->get(array('name', 'id'));
   }
 }

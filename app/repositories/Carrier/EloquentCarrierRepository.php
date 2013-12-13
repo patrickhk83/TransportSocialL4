@@ -24,6 +24,6 @@ class EloquentCarrierRepository implements CarrierRepositoryInterface {
   }
 
   public function suggest($term) {
-    return Carrier::where('name', 'like', '%'.$term.'%')->get(array('name'));
+    return Carrier::where('name', 'like', '%'.$term.'%')->orWhere('airline_code', 'like', '%'.$term.'%')->get(array('name'));
   }
 }
