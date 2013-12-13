@@ -13,11 +13,17 @@
 
   <div class="collapse navbar-collapse navbar-ex1-collapse">
     <ul class="nav navbar-nav">
-      {{ HTML::clever_link('flights.by_airport', 'By Airport') }}
-      {{ HTML::clever_link('flights.by_route', 'By Route') }}
-      {{ HTML::clever_link('flights.by_flight_num', 'By Flight') }}
+      <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Search Flights<b class="caret"></b></a>
+        <ul class="dropdown-menu">
+          {{ HTML::clever_link('flights.by_airport', 'By Airport') }}
+          {{ HTML::clever_link('flights.by_route', 'By Route') }}
+          {{ HTML::clever_link('flights.by_flight_num', 'By Flight') }}
+        </ul>
+      </li>
+
       @if(Sentry::check())
-        {{ HTML::clever_link('user.flights', 'Save Flights', array(Sentry::getUser()->id)) }}
+        {{ HTML::clever_link('user.flights', 'Saved Flights', array(Sentry::getUser()->id)) }}
         {{ HTML::clever_link('messages.inbox', 'Messages') }}
         {{ HTML::clever_link('user.profile', 'My Profile', array(Sentry::getUser()->id)) }}
         {{ HTML::clever_link('users.logout', 'Logout') }}
