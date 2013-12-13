@@ -1,6 +1,6 @@
 $("document").ready(function(){
 	$(selector).autocomplete({
-		minLength: 3,
+		minLength: 2,
 		source:function( request, response ) {
   		$.ajax({
   			type : "POST",
