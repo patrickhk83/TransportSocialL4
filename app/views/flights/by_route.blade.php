@@ -3,12 +3,12 @@
   @include('_partials.errors')
   {{ Form::open(array('action' => 'FlightsController@by_route'))}}
     <div class="form-group">
-      <label for="arrivalAirportCode">Arrival Airport</label>
-  		{{ Form::text('arrivalAirportCode', null, array('class' => 'form-control', 'id' => 'arrivalAirportCode')) }}
-    </div>
-    <div class="form-group">
       <label for="departureAirportCode">Departure Airport</label>
       {{ Form::text('departureAirportCode', null, array('class' => 'form-control', 'id' => 'departureAirportCode')) }}
+    </div>
+    <div class="form-group">
+      <label for="arrivalAirportCode">Arrival Airport</label>
+  		{{ Form::text('arrivalAirportCode', null, array('class' => 'form-control', 'id' => 'arrivalAirportCode')) }}
     </div>
     <div class="form-group">
       <label for="Date">Date</label>
