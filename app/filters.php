@@ -44,6 +44,12 @@ Route::filter('auth.basic', function()
 	return Auth::basic();
 });
 
+Route::filter('auth.isUser', function($route)
+{
+ $isUser = (Sentry::getUser()->id == $route->getParameter('id') ? true : false);
+ View::share('isUser', $isUser);
+});
+
 /*
 |--------------------------------------------------------------------------
 | Guest Filter

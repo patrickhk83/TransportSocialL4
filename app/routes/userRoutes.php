@@ -9,7 +9,7 @@ Route::group(array('before' => 'guest'), function()
 	Route::get('register', array('as' => 'users.registerForm', 'uses' => 'UsersController@register'));
 });
 
-Route::group(array('before' => 'auth'), function()
+Route::group(array('before' => 'auth|auth.isUser'), function()
 {
 	Route::get('logout',  array('as' => 'users.logout', 'uses' => 'UsersController@logout'));
 
