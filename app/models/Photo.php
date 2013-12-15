@@ -18,4 +18,9 @@ class Photo extends Eloquent {
   {
     return $this->morphTo();
   }
+
+  public function getPathAttribute($value)
+  {
+    return json_decode($this->attributes['path']);
+  }
 }
