@@ -103,7 +103,7 @@ class UsersController extends BaseController {
 		}
 		$picture = $this->users->getProfilePic($user);
 		$data['photos'] = $this->users->getPhotos($user);
-		$data['profile_pic'] = (count($picture) > 0 ? $picture->path : DEFAULT_PROFILE_IMG);
+		$data['profile_pic'] = (count($picture) > 0 ? $picture->path->thumb : DEFAULT_PROFILE_IMG);
 		if(isset($user->country)) {
 			$data['country'] = $this->countries->findByCode($user->country);
 		}
@@ -135,7 +135,7 @@ class UsersController extends BaseController {
 			$auth = new Services\Auth;
 			$image = new Services\Image;
 			$user = $auth->getUserInfo();
-			$image->upload(Input::file('profile_pic'), 'profile');
+			$image->upload(Input::file('profile_pic'), 'photos');
 			if(count($image->errors) > 0) {
 				Redirect::back()->withErrors($image->errors);
 			}
@@ -155,7 +155,7 @@ class UsersController extends BaseController {
 			$user = $auth->getUserInfo();
 			$photos = array();
 			foreach($files as $file) {
-				$image->upload($file, 'photo');
+				$image->upload($file, 'photos');
 				if(count($image->errors) > 0) {
 					Redirect::back()->withErrors($image->errors);
 				}
