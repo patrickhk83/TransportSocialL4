@@ -20,7 +20,7 @@
     <p>
       @foreach($flight->passengers as $passenger)
         @if($passenger->profilePicture['path'] != '')
-          <img src="{{ $passenger->profilePicture['path'] }}" width="20" height="20" />
+          <img src="{{ $passenger->profilePicture->path->thumb }}" width="20" height="20" />
         @else
           <img src="{{ DEFAULT_PROFILE_IMG }}" width="20" height="20" />
         @endif

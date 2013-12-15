@@ -11,7 +11,7 @@
 						<p>{{ $conversation->name }}</p>
 						@foreach($conversation->users as $user)
 							@if($user->profilePicture['path'] != '')
-								<img src="{{ $user->profilePicture['path'] }}" width="20" height="20" />
+								<img src="{{ $user->profilePicture->path->thumb }}" width="20" height="20" />
 							@else
 								<img src="{{ DEFAULT_PROFILE_IMG }}" width="20" height="20" />
 							@endif
