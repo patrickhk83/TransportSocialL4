@@ -8,7 +8,8 @@
 		"guzzle/guzzle": "dev-rfc3986",
 		"teepluss/asset": "dev-master",
 		"cartalyst/sentry": "2.0.*",
-		"jones/web-artisan": "dev-master"
+		"jones/web-artisan": "dev-master",
+		"intervention/image": "dev-master"
 	},
 	"require-dev": {
 		"way/generators": "dev-master",
