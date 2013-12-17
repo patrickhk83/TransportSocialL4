@@ -26,6 +26,7 @@
 				{{ link_to_route('user.edit_profile', 'Edit Profile', null, array('class' => 'btn btn-primary')) }}
 				{{ link_to_route('user.edit_profile', 'Edit Profile Picture', null, array('class' => 'btn btn-primary' , 'data-toggle' => 'modal' , 'data-target' => '#profile_pic_form' , 'data-remote' => 'false')) }}
 				{{ link_to_route('user.add_photo', 'Add Photos', null, array('class' => 'btn btn-primary' , 'data-toggle' => 'modal' , 'data-target' => '#upload_photo_dialog' , 'data-remote' => 'false')) }}
+				{{ link_to_route('user.change_password', 'Change Password', null, array('class' => 'btn btn-primary')) }}
 
 			@endif
 		</div>
