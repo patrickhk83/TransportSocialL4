@@ -7,6 +7,10 @@ Route::group(array('before' => 'guest'), function()
 
 	Route::post('register', array('as' => 'users.register', 'uses' => 'UsersController@create'));
 	Route::get('register', array('as' => 'users.registerForm', 'uses' => 'UsersController@register'));
+
+	Route::post('resetpassword', array('as' => 'users.resetpassword', 'uses' => 'UsersController@resetpassword'));
+	Route::get('resetpassword', array('as' => 'users.resetpasswordForm', 'uses' => 'UsersController@confirminfo'));
+
 });
 
 Route::group(array('before' => 'auth|auth.isUser'), function()
@@ -21,7 +25,13 @@ Route::group(array('before' => 'auth|auth.isUser'), function()
 
 	Route::get('user/profile/edit' , array('as' => 'user.edit_profile' , 'uses' => 'UsersController@edit_profile'));
 	Route::post('user/profile/edit' , array('as' => 'user.update' , 'uses' => 'UsersController@update'));
+
+	Route::get('user/profile/change_password' , array('as' => 'user.change_password' , 'uses' => 'UsersController@change_password'));
+	Route::post('user/profile/change_password' , array('as' => 'user.update_password' , 'uses' => 'UsersController@update_password'));
+
 });
 
 Route::get('user/{id}/activate/{activation_code}', array('as' => 'user.activate', 'uses' => 'UsersController@activate'))
 		->where(array('id' => '[0-9]+'));
+
+Route::get('user/{email}/{password}/activate/{reset_code}', array('as' => 'user.activate_reset_password', 'uses' => 'UsersController@activate_reset_password'));
