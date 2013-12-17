@@ -132,4 +132,81 @@ class Auth {
 		});
 	}
 
+	public function send_reset_code_to_email($input)
+	{
+		try
+		{
+			$user = \Sentry::findUserByLogin($input['email']);
+			$reset_code = $user->getResetPasswordCode();
+			$data = array(
+				'email' => $input['email'],
+				'password' => $input['password'],
+				'reset_code' => $reset_code
+			);
+
+			\Mail::send('emails.auth.reminder' , $data , function($message) use ($data)
+			{
+				$message->to($data['email'] , 'You')->subject(trans('user_auth.reset_password_label'));
+			});
+		}
+		catch(\Cartalyst\Sentry\Users\UserNotFoundException $e)
+		{
+			$this->errors[] = trans('auth.user_not_found');
+		}
+	}
+
+	public function reset_password($email , $password , $reset_code)
+	{
+		try
+		{
+		    $user = \Sentry::findUserByLogin($email);
+
+		    if ($user->checkResetPasswordCode($reset_code))
+		    {
+		        
+		        if ($user->attemptResetPassword($reset_code, $password))
+		        {
+		            // Password reset passed
+			        return;
+		        }
+		        else
+		        {
+		            $this->errors[] = trans('auth.reset_password_failed');
+		        }
+		    }
+		    else
+		    {
+		        $this->errors[] = trans('auth.reset_password_code_invalid');
+		    }
+		}
+		catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
+		{
+			$this->errors[] = trans('auth.user_not_found');
+		}
+	}
+
+	public function change_password($fields) 
+	{
+		try 
+		{
+			$user = \Sentry::getUser();
+
+			$user->password = $fields['new_password'];
+			$user->save();
+		}
+		catch(\Cartalyst\Sentry\Users\UserExistsException $e)
+		{
+			$this->errors[] = trans('auth.user_exists');
+		}
+		catch (\Cartalyst\Sentry\Users\UserNotFoundException $e)
+		{
+			$this->errors[] = trans('auth.user_not_found');
+		}
+
+		return $user;
+	}
+
+
+
+
 }
