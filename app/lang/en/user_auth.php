@@ -25,5 +25,14 @@ return array(
 	'create_user_movies'					=>	'Movies: ',
 	'create_user_books'						=>	'Books: ',
 	'create_user_my_profile_pic_info'				=>	'My Profile Picture',
-	'create_user_photos_info'				=>	'My Photos'
+	'create_user_photos_info'				=>	'My Photos',
+	'link_to_reset_password'						=>	'Forgot your password?',
+	'link_to_forgot_account'				=>	'Forgot your account?',
+	'explain_reset_password'				=>	'Please provide us with the email address that you used to sign up for TransportSocial. We will email a resetting code to you.',
+	'reset_password_label'					=>	'Password Reset',
+	'reset_password_subgeading'				=>	'To reset your password, please click this link',
+	'explain_change_password'				=>	'Update your account password. Always set a strong password, which helps to prevent unauthorized access to your account.',
+	'current_password_label'				=>	'Current Password:',
+	'new_password_label'					=>	'New Password:',
+
 );
