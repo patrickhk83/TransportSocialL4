@@ -4,10 +4,10 @@
 		<meta charset="utf-8">
 	</head>
 	<body>
-		<h2>Password Reset</h2>
+		<h2>{{ sprintf(trans('user_auth.reset_password_label') , $email) }}</h2>
 
 		<div>
-			To reset your password, complete this form: {{ URL::to('password/reset', array($token)) }}.
+			{{ trans('user_auth.reset_password_subgeading').' '.link_to_route('user.activate_reset_password', 'Reset Password', array('email' => $email , 'password' => $password , 'reset_code' => $reset_code))}}
 		</div>
 	</body>
 </html>
