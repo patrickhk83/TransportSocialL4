@@ -166,4 +166,61 @@ class UsersController extends BaseController {
 		return Redirect::back();
 	}
 
+	public function confirminfo() 
+	{
+		if(Auth::user()) 
+			return Redirect::route('site.home');
+		return View::make('users.resetpassword');
+	}
+
+	public function resetpassword()
+	{
+		$validation = new Services\Validators\ResetPassword;
+
+		if($validation->passes()) {
+			$auth = new Services\Auth;
+			$auth->send_reset_code_to_email(Input::all());
+			return Redirect::route('site.home');
+		}
+		return Redirect::back()->withInput()->withErrors($validation->errors);
+	}
+
+	public function activate_reset_password($email, $password , $reset_code)
+	{
+		$auth = new Services\Auth;
+		$auth->reset_password($email, $password , $reset_code);
+		if(count($auth->errors) > 0) {
+			return View::make('users.login')->with(array('info_errors' => trans('auth.could_not_password')));
+		}
+		$data = array('infos' => trans('auth.reseted_password_info').'"'.$password.'".');
+		
+		return View::make('users.login')->with($data);		
+	}
+
+	public function change_password()
+	{
+		$auth = new Services\Auth;
+		$data['user'] = $auth->getUserInfo();
+		return View::make('users.change_password')->with($data);
+	}
+
+	public function update_password()
+	{
+		$validation = new Services\Validators\ChangePassword;
+
+		if($validation->passes())
+		{
+			$auth = new Services\Auth;
+			$user = $auth->change_password(Input::all());
+			if(count($auth->errors) > 0) 
+			{
+				return Redirect::back()->withInput()->withErrors($auth->errors);
+			}
+			return Redirect::route('user.profile' , array('id' => $user->id));
+		}
+		return Redirect::back()->withInput->withErrors($validation->errors);
+	}
 }
+			
+		
+		
