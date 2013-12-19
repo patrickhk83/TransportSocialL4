@@ -39,6 +39,7 @@ class UsersController extends BaseController {
 			}
 			$user = $auth->GetUserInfo();
 			return Redirect::route('user.profile', array('id' => $user->id));
+			
 		}
 		return Redirect::back()->withInput()->withErrors($validation->errors);
 	}
@@ -85,6 +86,7 @@ class UsersController extends BaseController {
 				return Redirect::back()->withInput->withErrors($auth->errors);
 			}
 			return Redirect::route('user.profile' , array('id' => $user->id));
+			
 		}
 		return Redirect::back()->withInput->withErrors($validation->errors);
 	}
@@ -115,6 +117,9 @@ class UsersController extends BaseController {
 	{
 		$auth = new Services\Auth;
 		$data['user'] = $auth->getUserInfo();
+		$picture = $this->users->getProfilePic($data['user']);
+		$data['photos'] = $this->users->getPhotos($data['user']);
+		$data['profile_pic'] = (count($picture) > 0 ? $picture->path->thumb : DEFAULT_PROFILE_IMG);
 		$data['countries'] = $this->countries->listAll();
 		return View::make('users.edit_profile')->with($data);
 	}
@@ -201,6 +206,10 @@ class UsersController extends BaseController {
 	{
 		$auth = new Services\Auth;
 		$data['user'] = $auth->getUserInfo();
+		$picture = $this->users->getProfilePic($data['user']);
+		$data['photos'] = $this->users->getPhotos($data['user']);
+		$data['profile_pic'] = (count($picture) > 0 ? $picture->path->thumb : DEFAULT_PROFILE_IMG);
+
 		return View::make('users.change_password')->with($data);
 	}
 
