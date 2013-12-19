@@ -14,6 +14,7 @@
 ?>
 
 @section('content')
+	@include('_partials.users.sidebar')
 	<div>
 		<h1>{{$user->first_name." ".$user->last_name;}}</h1>
 		@if(!empty($user->company))
@@ -22,19 +23,13 @@
 			</div>
 		@endif
 		<div class="btn-group">
-		  @if($isUser)
+			@if($isUser)
 				{{ link_to_route('user.edit_profile', 'Edit Profile', null, array('class' => 'btn btn-primary')) }}
-				{{ link_to_route('user.edit_profile', 'Edit Profile Picture', null, array('class' => 'btn btn-primary' , 'data-toggle' => 'modal' , 'data-target' => '#profile_pic_form' , 'data-remote' => 'false')) }}
 				{{ link_to_route('user.add_photo', 'Add Photos', null, array('class' => 'btn btn-primary' , 'data-toggle' => 'modal' , 'data-target' => '#upload_photo_dialog' , 'data-remote' => 'false')) }}
-				{{ link_to_route('user.change_password', 'Change Password', null, array('class' => 'btn btn-primary')) }}
-
 			@endif
 		</div>
 	</div>
 	<br>
-	<div class="photo">
-		{{ HTML::image($profile_pic, null , array('class' => 'thumb')) }}
-	</div>
 	@if (isset($photos) && count($photos) > 0)
 	<h4 class="heading">{{ trans('user_auth.my_profile_my_photos'); }}</h4>
 		@foreach ($photos as $photo)
