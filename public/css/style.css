@@ -4,6 +4,7 @@
 
 .thumb {
 	height: 200px;
+	text-align: center;
 }
 
 [class*="col-md"] {
