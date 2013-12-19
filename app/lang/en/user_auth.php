@@ -34,5 +34,8 @@ return array(
 	'explain_change_password'				=>	'Update your account password. Always set a strong password, which helps to prevent unauthorized access to your account.',
 	'current_password_label'				=>	'Current Password:',
 	'new_password_label'					=>	'New Password:',
+	'sidebar_caption_user_profile_photo'	=>	'User Profile Photo',
+	'sidebar_link_profile'					=>	'Profile',
+	'sidebar_link_change_password'			=>	'Change Password'
 
 );
