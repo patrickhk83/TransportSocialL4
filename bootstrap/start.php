@@ -80,6 +80,24 @@ HTML::macro('clever_link', function($route, $text, $params = array(), $attribute
     return '<li' . $class . '>' . link_to_route($route, $text, $params, $attributes) . '</li>';
 });
 
+
+HTML::macro('clever_profile_link', function($route, $text, $params = array(), $attributes = array()) {
+    $class = '';
+    $routeUrl = route($route, $params);
+    $currentUrl = Route::currentRouteName();
+//dd($route);   
+    if($route == $currentUrl)
+    	$class = ' class="active"';
+    else if(strcmp($currentUrl , 'user.edit_profile') == 0 && strcmp($route , 'user.change_password') != 0)
+    	$class = ' class="active"';
+    else
+    	//dd($route);   
+    	$class = '';
+ 
+   	return '<li' . $class . '>' . link_to_route($route, $text, $params, $attributes) . '</li>';
+});
+
+
 require $app['path.base'].'/app/config/constants.php';
 
 return $app;
